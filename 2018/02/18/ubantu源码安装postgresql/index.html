@@ -20,18 +20,18 @@
     
     
     <meta name="keywords" content="数据库,postgresql">
-    <meta name="description" content="最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下，方便自己和他人，由于本人很菜，有不对的地方还往大神指点，谢谢!ps: 本文基于Ubantu 14.04.5 step1-安装前准备安装依赖包123sudo apt-get install libreadline6-devsudo apt-get install z">
+    <meta name="description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下(本文基于Ubantu 14.04.5)，方便自己和他人，由于本人很菜，有不对的地方还往大神批评指正，谢谢!        ps：由于刚开始写博客,目前是对以前学习的只是进行一个总结性的记录，可能会涉及到一些和大">
 <meta name="keywords" content="数据库,postgresql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ubantu源码安装postgresql">
 <meta property="og:url" content="http://yoursite.com/2018/02/18/ubantu源码安装postgresql/index.html">
 <meta property="og:site_name" content="Weiye&#39;s Blog">
-<meta property="og:description" content="最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下，方便自己和他人，由于本人很菜，有不对的地方还往大神指点，谢谢!ps: 本文基于Ubantu 14.04.5 step1-安装前准备安装依赖包123sudo apt-get install libreadline6-devsudo apt-get install z">
+<meta property="og:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下(本文基于Ubantu 14.04.5)，方便自己和他人，由于本人很菜，有不对的地方还往大神批评指正，谢谢!        ps：由于刚开始写博客,目前是对以前学习的只是进行一个总结性的记录，可能会涉及到一些和大">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-02-18T08:09:40.000Z">
+<meta property="og:updated_time" content="2018-02-18T08:47:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ubantu源码安装postgresql">
-<meta name="twitter:description" content="最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下，方便自己和他人，由于本人很菜，有不对的地方还往大神指点，谢谢!ps: 本文基于Ubantu 14.04.5 step1-安装前准备安装依赖包123sudo apt-get install libreadline6-devsudo apt-get install z">
+<meta name="twitter:description" content="&amp;#160; &amp;#160; &amp;#160; &amp;#160;最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下(本文基于Ubantu 14.04.5)，方便自己和他人，由于本人很菜，有不对的地方还往大神批评指正，谢谢!        ps：由于刚开始写博客,目前是对以前学习的只是进行一个总结性的记录，可能会涉及到一些和大">
     
         <link rel="alternate" type="application/atom+xml" title="Weiye&#39;s Blog" href="/atom.xml">
     
@@ -198,7 +198,7 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下，方便自己和他人，由于本人很菜，有不对的地方还往大神指点，谢谢!<br>ps: 本文基于Ubantu 14.04.5</p>
+            <p>&#160; &#160; &#160; &#160;最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下(本文基于Ubantu 14.04.5)，方便自己和他人，由于本人很菜，有不对的地方还往大神批评指正，谢谢!<br>        ps：由于刚开始写博客,目前是对以前学习的只是进行一个总结性的记录，可能会涉及到一些和大神作品雷同的内容,如有,请告诉我，谢谢！</p>
 <h2 id="step1-安装前准备"><a href="#step1-安装前准备" class="headerlink" title="step1-安装前准备"></a>step1-安装前准备</h2><h3 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libreadline6-dev</span><br><span class="line">sudo apt-get install zlib1g-dev</span><br><span class="line">sudo apt-get install libssl-dev</span><br></pre></td></tr></table></figure>
 <h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo tar xf postgresql-9.5.2.tar.gz</span><br><span class="line"><span class="built_in">cd</span> postgresql-9.5.2</span><br><span class="line">./configure --prefix=/usr/<span class="built_in">local</span>/pgsql --with-pgport=5432 --with-openssl</span><br></pre></td></tr></table></figure>
 <h2 id="step2-开始安装和配置"><a href="#step2-开始安装和配置" class="headerlink" title="step2-开始安装和配置"></a>step2-开始安装和配置</h2><h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp;  sudo make install</span><br></pre></td></tr></table></figure>
@@ -223,7 +223,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-02-18T08:09:40.000Z" itemprop="dateUpdated">2018-02-18 16:09:40</time>
+    最后更新时间：<time datetime="2018-02-18T08:47:14.000Z" itemprop="dateUpdated">2018-02-18 16:47:14</time>
 </span><br>
 
 
