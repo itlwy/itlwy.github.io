@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-01-21T14:27:13.000Z</updated>
+  <updated>2018-02-18T08:09:40.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ubantu源码安装postgresql</title>
+    <link href="http://yoursite.com/2018/02/18/ubantu%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85postgresql/"/>
+    <id>http://yoursite.com/2018/02/18/ubantu源码安装postgresql/</id>
+    <published>2018-02-18T07:30:30.000Z</published>
+    <updated>2018-02-18T08:09:40.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下，方便自己和他人，由于本人很菜，有不对的地方还往大神指点，谢谢!<br>ps: 本文基于Ubantu 14.04.5</p><h2 id="step1-安装前准备"><a href="#step1-安装前准备" class="headerlink" title="step1-安装前准备"></a>step1-安装前准备</h2><h3 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libreadline6-dev</span><br><span class="line">sudo apt-get install zlib1g-dev</span><br><span class="line">sudo apt-get install libssl-dev</span><br></pre></td></tr></table></figure><h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo tar xf postgresql-9.5.2.tar.gz</span><br><span class="line"><span class="built_in">cd</span> postgresql-9.5.2</span><br><span class="line">./configure --prefix=/usr/<span class="built_in">local</span>/pgsql --with-pgport=5432 --with-openssl</span><br></pre></td></tr></table></figure><h2 id="step2-开始安装和配置"><a href="#step2-开始安装和配置" class="headerlink" title="step2-开始安装和配置"></a>step2-开始安装和配置</h2><h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp;  sudo make install</span><br></pre></td></tr></table></figure><h3 id="安装contrib"><a href="#安装contrib" class="headerlink" title="安装contrib"></a>安装contrib</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> contrib</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure><h3 id="添加用户和组"><a href="#添加用户和组" class="headerlink" title="添加用户和组"></a>添加用户和组</h3><p>建立一个超级用户用于管理数据库</p><p>1.添加用户</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo adduser postgres</span><br></pre></td></tr></table></figure><p>2.建立数据库数据目录并授权</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line">sudo chown -R postgres:postgres /usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line">su postgres</span><br></pre></td></tr></table></figure><p>3.初始化数据库并启动数据库</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="built_in">local</span>/pgsql/bin/initdb -D /usr/<span class="built_in">local</span>/pgsql/data/</span><br><span class="line">/usr/<span class="built_in">local</span>/pgsql/bin/postgres -D /usr/<span class="built_in">local</span>/pgsql/data &gt;logfile 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure><p>4.将启动脚本加入到系统服务</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /usr/<span class="built_in">local</span>/src/postgresql-9.5.2/contrib/start-scripts/linux /etc/init.d/postgresql</span><br><span class="line">sudo chmod +x /etc/init.d/postgresql</span><br></pre></td></tr></table></figure><p>5.设置为开机启动<br>sudo update-rc.d postgresql defaults</p><p>经过以上步骤，数据库已经安装配置完成,可以通过命令查看其运行状态</p><h2 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h2><h3 id="查看postgresql服务"><a href="#查看postgresql服务" class="headerlink" title="查看postgresql服务"></a>查看postgresql服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service postgresql status</span><br></pre></td></tr></table></figure><h3 id="查看数据库进程运行状态"><a href="#查看数据库进程运行状态" class="headerlink" title="查看数据库进程运行状态"></a>查看数据库进程运行状态</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep postgres</span><br></pre></td></tr></table></figure><h3 id="数据库启动停止等"><a href="#数据库启动停止等" class="headerlink" title="数据库启动停止等"></a>数据库启动停止等</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">启动postgresql数据库</span><br><span class="line">sudo /etc/init.d/postgresql start</span><br><span class="line">重启postgresql数据库</span><br><span class="line">sudo /etc/init.d/postgresql restart</span><br><span class="line">停止postgresql数据库</span><br><span class="line">sudo /etc/init.d/postgresql stop</span><br><span class="line">查看postgresql数据库状态</span><br><span class="line">sudo /etc/init.d/postgresql status</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近学习postgresql数据库,直接用服务器的包管理器，版本选择处理起来很麻烦，所以查了下资料，选择用源码安装，这里做个笔记记录下，方便自己和他人，由于本人很菜，有不对的地方还往大神指点，谢谢!&lt;br&gt;ps: 本文基于Ubantu 14.04.5&lt;/p&gt;
+&lt;h2 id=
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="http://yoursite.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="数据库" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="postgresql" scheme="http://yoursite.com/tags/postgresql/"/>
+    
+  </entry>
   
   <entry>
     <title>初探nodejs</title>
