@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Weiye&#39;s Blog</title>
-  <icon>https://www.gravatar.com/avatar/7f1a0e2a53b9c5d6edb0d90b9e794386</icon>
+  <icon>https://www.gravatar.com/avatar/4868655ab178a145c6d43f310310383e</icon>
   <subtitle>好好学习,天天向上</subtitle>
   <link href="/atom.xml" rel="self"/>
   
@@ -11,7 +11,7 @@
   
   <author>
     <name>Weiye Lee</name>
-    <email>215155771@qq.com</email>
+    <email>9011532@qq.com</email>
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
