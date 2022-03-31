@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>基于DataBinding的基础View绑定库 | Weiye&#39;s Blog | 好好学习,天天向上</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android">
+    <meta name="description" content="github地址：https://github.com/itlwy/DBindingView Table of Contents1. 写在前面2. 缩略图3. 如何引入3.1. step13.2. step24. 如何使用4.1. 一般控件4.1.1. 涉及到的类4.1.2. 属性4.2. RecycleView4.2.1. 属性4.2.2. 代码说明5. 参考6. License   写在前面一">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于DataBinding的基础View绑定库">
+<meta property="og:url" content="http://yoursite.com/2018/08/24/DataBinding_View绑定库/index.html">
+<meta property="og:site_name" content="Weiye&#39;s Blog">
+<meta property="og:description" content="github地址：https://github.com/itlwy/DBindingView Table of Contents1. 写在前面2. 缩略图3. 如何引入3.1. step13.2. step24. 如何使用4.1. 一般控件4.1.1. 涉及到的类4.1.2. 属性4.2. RecycleView4.2.1. 属性4.2.2. 代码说明5. 参考6. License   写在前面一">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://github.com/itlwy/DBindingView/blob/master/pic/dbindingview.gif">
+<meta property="og:image" content="https://github.com/itlwy/DBindingView/blob/master/pic/dbindingview1.gif">
+<meta property="og:updated_time" content="2020-09-30T13:33:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于DataBinding的基础View绑定库">
+<meta name="twitter:description" content="github地址：https://github.com/itlwy/DBindingView Table of Contents1. 写在前面2. 缩略图3. 如何引入3.1. step13.2. step24. 如何使用4.1. 一般控件4.1.1. 涉及到的类4.1.2. 属性4.2. RecycleView4.2.1. 属性4.2.2. 代码说明5. 参考6. License   写在前面一">
+<meta name="twitter:image" content="https://github.com/itlwy/DBindingView/blob/master/pic/dbindingview.gif">
+    
+        <link rel="alternate" type="application/atom+xml" title="Weiye&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Weiye Lee</h5>
+          <a href="mailto:9011532@qq.com" title="9011532@qq.com" class="mail">9011532@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/itlwy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/Weiye__Lee" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/889c25a46410" target="_blank" >
+                <i class="icon icon-lg icon-book"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">基于DataBinding的基础View绑定库</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">基于DataBinding的基础View绑定库</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-08-24T12:00:30.000Z" itemprop="datePublished" class="page-time">
+  2018-08-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#table-of-contents"><span class="post-toc-number">1.</span> <span class="post-toc-text">Table of Contents</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#写在前面"><span class="post-toc-number"></span> <span class="post-toc-text">写在前面</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#缩略图"><span class="post-toc-number"></span> <span class="post-toc-text">缩略图</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#如何引入"><span class="post-toc-number"></span> <span class="post-toc-text">如何引入</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#step1"><span class="post-toc-number">1.</span> <span class="post-toc-text">step1</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#step2"><span class="post-toc-number">2.</span> <span class="post-toc-text">step2</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#如何使用"><span class="post-toc-number"></span> <span class="post-toc-text">如何使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#一般控件"><span class="post-toc-number">1.</span> <span class="post-toc-text">一般控件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#涉及到的类"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">涉及到的类</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#属性"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">属性</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RecycleView"><span class="post-toc-number">2.</span> <span class="post-toc-text">RecycleView</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#属性-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">属性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#代码说明"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">代码说明</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#参考"><span class="post-toc-number"></span> <span class="post-toc-text">参考</span></a>
+        </nav>
+    </aside>
+
+
+<article id="post-DataBinding_View绑定库"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">基于DataBinding的基础View绑定库</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-08-24 20:00:30" datetime="2018-08-24T12:00:30.000Z"  itemprop="datePublished">2018-08-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>github地址：<a href="https://github.com/itlwy/DBindingView" target="_blank" rel="noopener">https://github.com/itlwy/DBindingView</a></p>
+<div id="table-of-contents"><br><h2>Table of Contents</h2><br><div id="text-table-of-contents"><br><ul><br><li><a href="#sec-1">1. 写在前面</a></li><br><li><a href="#sec-2">2. 缩略图</a></li><br><li><a href="#sec-3">3. 如何引入</a><br><ul><br><li><a href="#sec-3-1">3.1. step1</a></li><br><li><a href="#sec-3-2">3.2. step2</a></li><br></ul><br></li><br><li><a href="#sec-4">4. 如何使用</a><br><ul><br><li><a href="#sec-4-1">4.1. 一般控件</a><br><ul><br><li><a href="#sec-4-1-1">4.1.1. 涉及到的类</a></li><br><li><a href="#sec-4-1-2">4.1.2. 属性</a></li><br></ul><br></li><br><li><a href="#sec-4-2">4.2. RecycleView</a><br><ul><br><li><a href="#sec-4-2-1">4.2.1. 属性</a></li><br><li><a href="#sec-4-2-2">4.2.2. 代码说明</a></li><br></ul><br></li><br></ul><br></li><br><li><a href="#sec-5">5. 参考</a></li><br><li><a href="#sec-6">6. License</a></li><br></ul><br></div><br></div>
+
+
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面<a id="sec-1" name="sec-1"></a></h1><p>一个对databinding的常用封装库,包含基础控件及recycleview等。不了解databinding的可以先阅读相关网上的资料,这里推荐<a href="https://blog.csdn.net/tianjf0514/article/details/75195108" target="_blank" rel="noopener"><br>Android DataBinding介绍</a></p>
+<h1 id="缩略图"><a href="#缩略图" class="headerlink" title="缩略图"></a>缩略图<a id="sec-2" name="sec-2"></a></h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/itlwy/DBindingView/blob/master/pic/dbindingview.gif" alt="normalWidget" title>
+                </div>
+                <div class="image-caption">normalWidget</div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://github.com/itlwy/DBindingView/blob/master/pic/dbindingview1.gif" alt="recycleview" title>
+                </div>
+                <div class="image-caption">recycleview</div>
+            </figure>
+<h1 id="如何引入"><a href="#如何引入" class="headerlink" title="如何引入"></a>如何引入<a id="sec-3" name="sec-3"></a></h1><h2 id="step1"><a href="#step1" class="headerlink" title="step1"></a>step1<a id="sec-3-1" name="sec-3-1"></a></h2><p>Add the JitPack repository to your build file</p>
+<pre><code>allprojects {
+                        repositories {
+                                ...
+                                maven { url &apos;https://jitpack.io&apos; }
+                        }
+                }
+</code></pre><h2 id="step2"><a href="#step2" class="headerlink" title="step2"></a>step2<a id="sec-3-2" name="sec-3-2"></a></h2><p>Add the dependency</p>
+<pre><code>dependencies {
+                compile &apos;com.github.itlwy:DBindingView:v1.1.14&apos;
+        }
+</code></pre><h1 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用<a id="sec-4" name="sec-4"></a></h1><h2 id="一般控件"><a href="#一般控件" class="headerlink" title="一般控件"></a>一般控件<a id="sec-4-1" name="sec-4-1"></a></h2><p>如上面的动态图,目前展示了基本控件的进行一些初始化的封装,目的是将一些繁琐的初始化操作自动化掉。注意,这里用到的属性均是自定义属性,前缀请用app:</p>
+<h3 id="涉及到的类"><a href="#涉及到的类" class="headerlink" title="涉及到的类"></a>涉及到的类<a id="sec-4-1-1" name="sec-4-1-1"></a></h3><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides"><br><br><br><colgroup><br><col class="left"><br><br><col class="left"><br><br><col class="left"><br></colgroup><br><thead><br><tr><br><th scope="col" class="left">类名</th><br><th scope="col" class="left">包名</th><br><th scope="col" class="left">说明</th><br></tr><br></thead><br><br><tbody><br><tr><br><td class="left">KeyValue</td><br><td class="left">com.lwy.dbindingview.data</td><br><td class="left">存储key(Integer)-value(String),主要用于spinner、checkbox、radiogroup等,实现数据源的key-label模式</td><br></tr><br></tbody><br><br><tbody><br><tr><br><td class="left">BindingSpinner</td><br><td class="left">com.lwy.dbindingview.bindingadapter.spinner</td><br><td class="left">封装的双向绑定自定义Spinner</td><br></tr><br><br><br><tr><br><td class="left">DataBindingRadioGroup</td><br><td class="left">com.lwy.dbindingview.bindingadapter.radiogroup</td><br><td class="left">封装的双向绑定自定义RadioGroup</td><br></tr><br><br><br><tr><br><td class="left">DataBindingRadioButton</td><br><td class="left">com.lwy.dbindingview.bindingadapter.radiogroup</td><br><td class="left">封装的双向绑定自定义RadioButton</td><br></tr><br><br><br><tr><br><td class="left">BindingCheckGroup</td><br><td class="left">com.lwy.dbindingview.bindingadapter.checkbox</td><br><td class="left">封装的双向绑定自定义LinearLayout,用作BindingCheckBox容器</td><br></tr><br><br><br><tr><br><td class="left">BindingCheckBox</td><br><td class="left">com.lwy.dbindingview.bindingadapter.checkbox</td><br><td class="left">封装的双向绑定自定义CheckBox</td><br></tr><br><br><br><tr><br><td class="left">BindingEditText</td><br><td class="left">com.lwy.dbindingview.bindingadapter.edittext.BindingEditText</td><br><td class="left">让EditText支持绑定数值类型,eg:Integer、Double&#x2026;</td><br></tr><br></tbody><br></table>
+
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性<a id="sec-4-1-2" name="sec-4-1-2"></a></h3><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides"><br><br><br><colgroup><br><col class="left"><br><br><col class="left"><br><br><col class="left"><br><br><col class="left"><br><br><col class="left"><br></colgroup><br><thead><br><tr><br><th scope="col" class="left">控件</th><br><th scope="col" class="left">自定义属性</th><br><th scope="col" class="left">值类型</th><br><th scope="col" class="left">值</th><br><th scope="col" class="left">说明</th><br></tr><br></thead><br><br><tbody><br><tr><br><td class="left">BindingSpinner</td><br><td class="left">selectedValue</td><br><td class="left">KeyValue</td><br><td class="left">&#xa0;</td><br><td class="left">绑定选中的值</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">spinneritems</td><br><td class="left">List&lt;KeyValue&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">spinner的适配器数据源</td><br></tr><br></tbody><br><br><tbody><br><tr><br><td class="left">DataBindingRadioGroup</td><br><td class="left">selectedValue</td><br><td class="left">KeyValue</td><br><td class="left">&#xa0;</td><br><td class="left">绑定RadioGroup选中的值</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">items</td><br><td class="left">List&lt;KeyValue&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">设置该属性可动态渲染子view</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">childViewFactory</td><br><td class="left">DBCustomViewFactory&lt;DataBindingRadioButton&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">当设置了items属性时,可通过此属性传入继承自DataBindingRadioButton的自定义view,不设则用默认类</td><br></tr><br><br><br><tr><br><td class="left">DataBindingRadioButton</td><br><td class="left">value</td><br><td class="left">KeyValue</td><br><td class="left">&#xa0;</td><br><td class="left">初始化RadioButton的值</td><br></tr><br></tbody><br><br><tbody><br><tr><br><td class="left">BindingCheckGroup</td><br><td class="left">selectedValues</td><br><td class="left">List&lt;KeyValue&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">存储checkbox选中的值,默认用,分割</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">items</td><br><td class="left">List&lt;KeyValue&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">设置该属性可动态渲染子view</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">childViewFactory</td><br><td class="left">DBCustomViewFactory&lt;BindingCheckBox&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">当设置了items属性时,可通过此属性传入继承自BindingCheckBox的自定义view,不设则用默认类</td><br></tr><br></tbody><br><br><tbody><br><tr><br><td class="left">BindingCheckBox</td><br><td class="left">value</td><br><td class="left">KeyValue</td><br><td class="left">&#xa0;</td><br><td class="left">设置值</td><br></tr><br><br><br><tr><br><td class="left">ImageView</td><br><td class="left">uri</td><br><td class="left">String or ObservableField<string></string></td><br><td class="left">&#xa0;</td><br><td class="left">图片的url,用的加载框架是glide</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">placeholderImageRes</td><br><td class="left">int</td><br><td class="left">eg:R.mipmap.ic_launcher</td><br><td class="left">占位图</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">request_width、request_width</td><br><td class="left">int</td><br><td class="left">&#xa0;</td><br><td class="left">设置图片的大小,不设置默认用view的大小,2个属性必修同时设置才有效</td><br></tr><br></tbody><br><br><tbody><br><tr><br><td class="left">View</td><br><td class="left">clickCommand</td><br><td class="left">ReplyCommand</td><br><td class="left">&#xa0;</td><br><td class="left">点击事件触发的命令</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">display</td><br><td class="left">boolean</td><br><td class="left">&#xa0;</td><br><td class="left">控制view的Visibility</td><br></tr><br></tbody><br><br><tbody><br><tr><br><td class="left">BindingEdittext</td><br><td class="left">textDouble、textInt、textFloat、textLong</td><br><td class="left">Double、Float、Integer、Long</td><br><td class="left">&#xa0;</td><br><td class="left">绑定数值类型</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">regularExpression</td><br><td class="left">&#xa0;</td><br><td class="left"></td><br><td class="left">正则表达式校验输入值&#xa0;</td><br></tr><br></tbody><br></table>
+
+<p>具体使用很简单,直接看demo&#x2013;&gt;com.lwy.dbindingview.base_widget.WidgeActivity</p>
+<p>这里说明下DataBindingRadioGroup和BindingCheckGroup,</p>
+<pre><code>&lt;com.lwy.dbindingview.bindingadapter.radiogroup.DataBindingRadioGroup
+                      android:layout_width=&quot;0dp&quot;
+                      android:layout_height=&quot;wrap_content&quot;
+                      android:layout_marginLeft=&quot;@dimen/margin_medium&quot;
+                      android:layout_marginRight=&quot;@dimen/margin_medium&quot;
+                      android:layout_weight=&quot;10&quot;
+                      android:orientation=&quot;horizontal&quot;
+                      app:items=&quot;@{viewmodel.sexList}&quot;
+                      app:childViewFactory=&quot;@{ViewFactory.createDBRadioButton()}&quot;
+                      app:selectedValue=&quot;@={viewmodel.sex}&quot;/&gt;
+</code></pre><p>这里的app:items属性,让其根据sexList动态渲染子view(DataBindingRadioButton),也可以选择在布局里直接写子View，如：</p>
+<pre><code>&lt;com.lwy.dbindingview.bindingadapter.radiogroup.DataBindingRadioGroup
+                        android:layout_width=&quot;0dp&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        android:layout_marginLeft=&quot;@dimen/margin_medium&quot;
+                        android:layout_marginRight=&quot;@dimen/margin_medium&quot;
+                        android:layout_weight=&quot;10&quot;
+                        android:orientation=&quot;horizontal&quot;
+                        app:selectedValue=&quot;@={viewmodel.sex}&quot;&gt;
+                        &lt;com.lwy.dbindingview.bindingadapter.radiogroup.DataBindingRadioButton
+                            android:layout_width=&quot;wrap_content&quot;
+                            app:value=&quot;@{viewmodel.sex_male}&quot;
+                            android:layout_height=&quot;wrap_content&quot;/&gt;
+                        &lt;com.lwy.dbindingview.bindingadapter.radiogroup.DataBindingRadioButton
+                            android:layout_width=&quot;wrap_content&quot;
+                            app:value=&quot;@{viewmodel.sex_female}&quot;
+                            android:layout_height=&quot;wrap_content&quot;/&gt;
+                    &lt;/com.lwy.dbindingview.bindingadapter.radiogroup.DataBindingRadioGroup&gt;
+</code></pre><hr>
+<p>BindingCheckGroup同理</p>
+<h2 id="RecycleView"><a href="#RecycleView" class="headerlink" title="RecycleView"></a>RecycleView<a id="sec-4-2" name="sec-4-2"></a></h2><h3 id="属性-1"><a href="#属性-1" class="headerlink" title="属性"></a>属性<a id="sec-4-2-1" name="sec-4-2-1"></a></h3><table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides"><br><br><br><colgroup><br><col class="left"><br><br><col class="left"><br><br><col class="left"><br><br><col class="left"><br></colgroup><br><thead><br><tr><br><th scope="col" class="left">属性</th><br><th scope="col" class="left">值类型</th><br><th scope="col" class="left">值</th><br><th scope="col" class="left">说明</th><br></tr><br></thead><br><br><tbody><br><tr><br><td class="left">itemBinding</td><br><td class="left">ItemBinding</td><br><td class="left">&#xa0;</td><br><td class="left">必填,item的布局和变量的绑定关系包装类</td><br></tr><br><br><br><tr><br><td class="left">items</td><br><td class="left">List&lt;T&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">必填,数据源</td><br></tr><br><br><br><tr><br><td class="left">adapter</td><br><td class="left">BindingRecyclerViewAdapter&lt;T&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">选填,可继承BindingRecyclerViewAdapter自定义适配器</td><br></tr><br><br><br><tr><br><td class="left">itemIds</td><br><td class="left">BindingRecyclerViewAdapter.ItemIds&lt;? super T&gt;</td><br><td class="left">&#xa0;</td><br><td class="left">选填,不设置则默认使用position</td><br></tr><br><br><br><tr><br><td class="left">viewHolder</td><br><td class="left">BindingRecyclerViewAdapter.ViewHolderFactory</td><br><td class="left">&#xa0;</td><br><td class="left">选填,可继承以实现自定义ViewHolder</td><br></tr><br><br><br><tr><br><td class="left">onItemClick</td><br><td class="left">BindingRecyclerViewAdapter.OnItemClickListener</td><br><td class="left">&#xa0;</td><br><td class="left">item点击事件</td><br></tr><br><br><br><tr><br><td class="left">layoutManager</td><br><td class="left">LayoutManagers.LayoutManagerFactory</td><br><td class="left">&#xa0;</td><br><td class="left">必填,布局方式,如线性:LayoutManagers.linear()</td><br></tr><br><br><br><tr><br><td class="left">&#xa0;</td><br><td class="left">&#xa0;</td><br><td class="left">&#xa0;</td><br><td class="left">&#xa0;</td><br></tr><br></tbody><br></table>
+
+<h3 id="代码说明"><a href="#代码说明" class="headerlink" title="代码说明"></a>代码说明<a id="sec-4-2-2" name="sec-4-2-2"></a></h3><ol>
+<li><p>单个布局的简单列表代码片段</p>
+<p>1、定义viewmodel</p>
+<pre><code>public class ItemVM extends BaseObservable {
+    public final boolean checkable; // for now,it&apos;s useless
+    @Bindable
+    private int index;
+    @Bindable
+    private boolean checked;
+
+    public ItemVM(int index, boolean checkable) {
+        this.index = index;
+        this.checkable = checkable;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public boolean onToggleChecked(View v) {
+        if (!checkable) {
+            return false;
+        }
+        checked = !checked;
+//        notifyPropertyChanged(com.lwy.dbindingview.BR.checked);
+        return true;
+    }
+}
+</code></pre><p>2、定义Item布局文件R.layout.item</p>
+<pre><code>&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;&gt;
+
+    &lt;data&gt;
+
+        &lt;variable
+            name=&quot;item&quot;
+            type=&quot;com.lwy.dbindingview.recycleview.vm.ItemVM&quot; /&gt;
+
+        &lt;import type=&quot;android.view.View&quot; /&gt;
+    &lt;/data&gt;
+
+    &lt;LinearLayout
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:background=&quot;?selectableItemBackground&quot;
+        android:onLongClickListener=&quot;@{item::onToggleChecked}&quot;
+        android:longClickable=&quot;@{item.checkable}&quot;
+        android:orientation=&quot;horizontal&quot;&gt;
+
+        &lt;TextView
+            style=&quot;@style/TextAppearance.AppCompat.Body1&quot;
+            android:layout_width=&quot;0dp&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_weight=&quot;1&quot;
+            android:padding=&quot;16dp&quot;
+            android:text=&apos;@{&quot;Item &quot; + (item.index + 1)}&apos;
+            tools:text=&quot;Item 1&quot; /&gt;
+
+        &lt;ImageView
+            android:layout_width=&quot;48dp&quot;
+            android:layout_height=&quot;48dp&quot;
+            android:src=&quot;@mipmap/ic_action_check&quot;
+            android:visibility=&quot;@{item.checked ? View.VISIBLE : View.GONE}&quot; /&gt;
+    &lt;/LinearLayout&gt;
+&lt;/layout&gt;
+</code></pre><p>3、创建layout和viewmodel变量的绑定关系包装类</p>
+<pre><code>public final ItemBinding&lt;ItemVM&gt; singleItem = ItemBinding.of(com.lwy.dbindingview.BR.item, R.layout.item);
+</code></pre><p>4、创建数据源</p>
+<pre><code>public final ObservableList&lt;ItemVM&gt; items = new ObservableArrayList&lt;&gt;();
+</code></pre><p>5、设置RecycleView的属性</p>
+<pre><code>...
+ &lt;android.support.v7.widget.RecyclerView
+               android:id=&quot;@+id/list&quot;
+               android:layout_width=&quot;match_parent&quot;
+               android:layout_height=&quot;match_parent&quot;
+               app:itemBinding=&quot;@{viewmodel.singleItem}&quot;
+               app:items=&quot;@{viewmodel.items}&quot;
+               app:layoutManager=&quot;@{LayoutManagers.linear()}&quot;/&gt;
+ ...
+</code></pre></li>
+<li><p>复杂布局代码片段</p>
+<p>1、定义viewmodel(同上)</p>
+<p>2、定义Item布局文件R.layout.item(同上)</p>
+<p>3、创建footer的viewmodel</p>
+<pre><code>public class FooterVM extends RcVFooterVM {
+
+    public final ReplyCommand clickCommand = new ReplyCommand(new Action0() {
+        @Override
+        public void call() {
+            if (!getIsFooterLoading().get()) {
+                switchLoading(true);
+                callback.execute();
+            }
+
+        }
+    });
+
+    private ReplyCommand callback;
+</code></pre></li>
+</ol>
+<pre><code>        public final ObservableField&lt;String&gt; noMoreTip = new ObservableField&lt;&gt;();
+        /*
+            state : 0 loading
+            state : 1 idle
+         */
+        public final ObservableField&lt;Integer&gt; state = new ObservableField&lt;&gt;();
+
+
+        public FooterVM(ReplyCommand callback) {
+            super();
+            this.callback = callback;
+            switchLoading(false);
+            noMoreTip.set(&quot;暂无更多&quot;);
+        }
+
+        @Override
+        protected ReplyCommand&lt;Integer&gt; geneOnLoadMoreCommand() {
+            return new ReplyCommand&lt;&gt;(new Action1&lt;Integer&gt;() {
+                @Override
+                public void call(Integer integer) {
+                    FooterVM.this.callback.execute();
+    //                switchLoading(true);
+                }
+            });
+        }
+
+        @Override
+        public void switchLoading(boolean flag) {
+            if (flag) {
+                state.set(0);
+            } else {
+                state.set(1);
+            }
+            super.switchLoading(flag);
+        }
+    }
+
+4、创建footer的布局文件R.layout.default_loading
+
+    &lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+            xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+            xmlns:tools=&quot;http://schemas.android.com/tools&quot;&gt;
+
+        &lt;data&gt;
+
+            &lt;variable
+                name=&quot;footerVM&quot;
+                type=&quot;com.lwy.dbindingview.recycleview.vm.FooterVM&quot;/&gt;
+        &lt;/data&gt;
+
+    &lt;LinearLayout
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:orientation=&quot;vertical&quot;
+            app:clickCommand=&quot;@{footerVM.clickCommand}&quot;&gt;
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;45dp&quot;
+                android:gravity=&quot;center&quot;
+                android:orientation=&quot;horizontal&quot;
+                android:padding=&quot;8dp&quot;
+                app:display=&quot;@{footerVM.state==0?true:false}&quot;&gt;
+
+                &lt;ProgressBar
+                    android:layout_width=&quot;32dp&quot;
+                    android:layout_height=&quot;32dp&quot;
+                    /&gt;
+
+                &lt;TextView
+                    android:layout_width=&quot;wrap_content&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:layout_marginLeft=&quot;8dp&quot;
+                    android:text=&quot;正在加载...&quot;
+                    android:textSize=&quot;14sp&quot;/&gt;
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;45dp&quot;
+                android:gravity=&quot;center&quot;
+                android:orientation=&quot;horizontal&quot;
+                android:padding=&quot;8dp&quot;
+                app:display=&quot;@{footerVM.state==1?true:false}&quot;&gt;
+
+                &lt;TextView
+                    android:layout_width=&quot;wrap_content&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    android:layout_gravity=&quot;center&quot;
+                    android:layout_marginLeft=&quot;8dp&quot;
+                    android:text=&quot;@{footerVM.noMoreTip}&quot;
+                    android:textSize=&quot;14sp&quot;/&gt;
+            &lt;/LinearLayout&gt;
+        &lt;/LinearLayout&gt;
+    &lt;/layout&gt;
+
+5、创建layout和viewmodel变量的绑定关系包装类
+
+    // 这里根据class类型来控制不同的item
+    public final ItemBinding&lt;Object&gt; multipleItems = ItemBinding.of(new OnItemBindClass&lt;&gt;()
+                .map(FooterVM.class, BR.footerVM, R.layout.default_loading)
+                .map(String.class, com.lwy.dbindingview.BR.item, R.layout.item_header_footer)
+                .map(ItemVM.class, com.lwy.dbindingview.BR.item, R.layout.item));
+
+6、创建数据源
+
+    public final FooterVM footerVM = new FooterVM(new ReplyCommand&lt;Integer&gt;(new Action1&lt;Integer&gt;() {
+
+            @Override
+            public void call(Integer integer) {
+                // 异步执行加载数据 完了需要调用 &quot;footerVM.switchLoading(false)&quot; 取消加载状态
+            }
+        }));
+
+    public final ObservableList&lt;ItemVM&gt; items = new ObservableArrayList&lt;&gt;();
+    public final MergeObservableList&lt;Object&gt; headerFooterItems = new MergeObservableList&lt;&gt;()
+                .insertItem(&quot;Header&quot;)
+                .insertList(items)
+                .insertItem(footerVM);
+
+5、设置RecycleView的属性
+
+    ...
+    &lt;android.support.v7.widget.RecyclerView
+                   android:id=&quot;@+id/list&quot;
+                   android:layout_width=&quot;match_parent&quot;
+                   android:layout_height=&quot;match_parent&quot;
+                   app:itemBinding=&quot;@{viewmodel.multipleItems}&quot;
+                   app:items=&quot;@{viewmodel.headerFooterItems}&quot;
+                   app:layoutManager=&quot;@{LayoutManagers.linear()}&quot;/&gt;
+    ...
+</code></pre><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考<a id="sec-5" name="sec-5"></a></h1><ol>
+<li><a href="https://github.com/evant/binding-collection-adapter" target="_blank" rel="noopener">binding-collection-adapter</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-09-30T13:33:34.000Z" itemprop="dateUpdated">2020-09-30 21:33:34</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/08/24/DataBinding_View绑定库/" target="_blank" rel="external">http://yoursite.com/2018/08/24/DataBinding_View绑定库/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Weiye Lee">
+            Weiye Lee
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/&title=《基于DataBinding的基础View绑定库》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/&title=《基于DataBinding的基础View绑定库》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/08/24/DataBinding_View绑定库/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于DataBinding的基础View绑定库》 — Weiye's Blog&url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/09/04/Android增量自动更新/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Android自动更新,支持增量更新</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/07/15/nginx折腾记/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">nginx折腾记</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Weiye Lee &copy; 2015 - 2022</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/&title=《基于DataBinding的基础View绑定库》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/&title=《基于DataBinding的基础View绑定库》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/08/24/DataBinding_View绑定库/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《基于DataBinding的基础View绑定库》 — Weiye's Blog&url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/08/24/DataBinding_View绑定库/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aQW7DMAwEwP7/0+kDmri7lFvA0vgUpA2t0YEQSX19xc/r8vn5P58iXH9/HeGGBwMD47GMfIkry/oU7TpysjYMDIxzGHctKE+XM+TH7zEwMDAuk90M1m4TBgYGRvKa9ug2OxRiYGBgrBSxedDrCNdx/rwWx8DAeCAjLzj///OfzDcwMDAexXiNnqTsTFLwLMm+eS8GBsbWjFmxmo8BZhcs8g3CwMA4k7H+ymSEkC/uhssWGBgYD2e0Lfv1BlnLjpI7BgbGAYxZE3/l6li7HdcbhIGBcQIjSbIrZefsGmtRPGNgYGzNyMvIWUrNxwOz6SQGBsbJjJWD4OyvKyUuBgbG3ozkMNce+NqjYZvW38THwMDYmtG2w/Jk3cZJNnE4yMTAwHg4Iwm6Mm5s2/2zlhwGBsYJjHyhbVG6PqocXrbAwMDYiLFy7Jsl37xwXSpiMTAwNmIkP1vpvc8OoHWzDwMD4wDGXW36dlTQlq8YGBhnMmZDyvaY2B4K2zVgYGDszZgl3CSBJktvN7EeYWJgYGzBiAaEcestubqRl7755mJgYOzNeJVPPvjMi94k/i+JGwMDY2vGSqGbl6ltwZyn7/rBwMB4LGOWZNvkmC+xHWpiYGCcw8hHjzPALEEXq8LAwMCIj4az8WQyCr0t4WJgYGzNyBtn7cAgL3cxMDBOZrRt/XzR7cBy2KrDwMDYmtGWju2L28j5WHQ438DAwHgS4xsAFDMImN0VlwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

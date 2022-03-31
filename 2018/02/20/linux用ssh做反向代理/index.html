@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>linux用ssh做反向代理 | Weiye&#39;s Blog | 好好学习,天天向上</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="ubantu">
+    <meta name="description" content="在部署服务器的时候，经常会是这样一种情况:生产的服务器部署在一个安全的局域网环境中，不对外暴露端口的话，无法从外网访问到它。这时候，我们可以通过一台外网可访问的服务器做跳转，间接访问到服务器A。                                                                                             ssh反向代理示">
+<meta name="keywords" content="ubantu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux用ssh做反向代理">
+<meta property="og:url" content="http://yoursite.com/2018/02/20/linux用ssh做反向代理/index.html">
+<meta property="og:site_name" content="Weiye&#39;s Blog">
+<meta property="og:description" content="在部署服务器的时候，经常会是这样一种情况:生产的服务器部署在一个安全的局域网环境中，不对外暴露端口的话，无法从外网访问到它。这时候，我们可以通过一台外网可访问的服务器做跳转，间接访问到服务器A。                                                                                             ssh反向代理示">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://img.blog.csdn.net/20180219195159811?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2VpeWVfX0xlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:updated_time" content="2020-09-30T13:33:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux用ssh做反向代理">
+<meta name="twitter:description" content="在部署服务器的时候，经常会是这样一种情况:生产的服务器部署在一个安全的局域网环境中，不对外暴露端口的话，无法从外网访问到它。这时候，我们可以通过一台外网可访问的服务器做跳转，间接访问到服务器A。                                                                                             ssh反向代理示">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20180219195159811?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2VpeWVfX0xlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+    
+        <link rel="alternate" type="application/atom+xml" title="Weiye&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Weiye Lee</h5>
+          <a href="mailto:9011532@qq.com" title="9011532@qq.com" class="mail">9011532@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/itlwy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/Weiye__Lee" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/889c25a46410" target="_blank" >
+                <i class="icon icon-lg icon-book"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">linux用ssh做反向代理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">linux用ssh做反向代理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-02-20T05:31:57.000Z" itemprop="datePublished" class="page-time">
+  2018-02-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#step1-设置免密码登录"><span class="post-toc-number">1.</span> <span class="post-toc-text">step1.设置免密码登录</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#step2-用ssh建立反向链接"><span class="post-toc-number">2.</span> <span class="post-toc-text">step2.用ssh建立反向链接</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-linux用ssh做反向代理"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">linux用ssh做反向代理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-02-20 13:31:57" datetime="2018-02-20T05:31:57.000Z"  itemprop="datePublished">2018-02-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>　　在部署服务器的时候，经常会是这样一种情况:生产的服务器部署在一个安全的局域网环境中，不对外暴露端口的话，无法从外网访问到它。这时候，我们可以通过一台外网可访问的服务器做跳转，间接访问到服务器A。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://img.blog.csdn.net/20180219195159811?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvV2VpeWVfX0xlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="ssh反向代理示意图" title>
+                </div>
+                <div class="image-caption">ssh反向代理示意图</div>
+            </figure><br>　　如上图，客户端C无法直接访问到服务器A，那么我们先在局域网内访问服务器A,在服务器A上建立与服务器B的反向代理通道。此时，客户端C可通过访问服务器B，再经由服务器B这个代理，访问到服务器</p>
+<h2 id="step1-设置免密码登录"><a href="#step1-设置免密码登录" class="headerlink" title="step1.设置免密码登录"></a>step1.设置免密码登录</h2><ul>
+<li>在内网服务器A上生产公钥和私钥，并把公钥内容拷到服务器B的~/.ssh/authorized_keys里<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa</span><br><span class="line">...(一直按Enter，最后在~/.ssh/下生成密钥)</span><br><span class="line">$ ssh-copy-id -i ~/.ssh/id_rsa.pub user@hostB</span><br><span class="line">把本机的公钥追到hostB的 ~/.ssh/authorized_keys 里</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>于是服务器 A上的用户就可以用ssh以用户B的身份无需密码登陆到服务器 B上了。如:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -l userB serverB。</span><br></pre></td></tr></table></figure></p>
+<h2 id="step2-用ssh建立反向链接"><a href="#step2-用ssh建立反向链接" class="headerlink" title="step2.用ssh建立反向链接"></a>step2.用ssh建立反向链接</h2><p>在内网服务器A上执行<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -NfR 1234:localhost:22 userB@123.123.123.123 -p 22</span><br></pre></td></tr></table></figure></p>
+<p>　　上面命令中,-N表示不执行远程命令,-f表示后台运行,-R则针对后面的绑定参数进行端口映射。整体意思是：将本机（服务器A）的22与远程服务器的1234端口进行绑定，相当于远程端口映射(Remote Port Forwarding)。<br>　　这时在服务器B上sshd会listen本地1234端口<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ss -ant</span><br><span class="line"></span><br><span class="line">State      Recv-Q Send-Q        Local Address:Port          Peer Address:Port</span><br><span class="line">LISTEN     0      128               127.0.0.1:1234                     *:*</span><br></pre></td></tr></table></figure></p>
+<pre><code>客户端C通过如下步骤可访问到服务器A:
+</code></pre><p>1.通过ssh连接到服务器B<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh userB@服务器B地址</span><br></pre></td></tr></table></figure></p>
+<p>2.通过刚刚建立的反向通道，连接到服务器A<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh localhost -p 1234</span><br></pre></td></tr></table></figure></p>
+<p>　　搞定完上面的步骤，已经可以从外网连接到服务器A了，但是这种方式还存在问题，服务器A-&gt;服务器B的链路是不稳定的，随时可能会断开，这时候可以用autossh这个命令，它可以帮助监听链路的连接情况，断开时可帮我们自动重连。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">autossh -M 5678 -NR 1234:localhost:22 userB@123.123.123.123 -p 22</span><br></pre></td></tr></table></figure></p>
+<p>　　比之前的命令添加的一个-M 5678参数，负责通过5678端口监视连接状态，连接有问题时就会自动重连，去掉了一个-f参数，因为autossh本身就会在background运行<br>　　最后，还有一种情况就是机器重启了，这时候需要将该命令加入到自启动命令列表里。有多种方式，这里采用在/etc/rc.local文件里追加内容，将以下内容加入到文件里即可<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/sudo -u conwin /usr/bin/autossh -M 5678 -NR 1234:localhost:22 userB@123.123.123.123 -p 22</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-09-30T13:33:34.000Z" itemprop="dateUpdated">2020-09-30 21:33:34</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2018/02/20/linux用ssh做反向代理/" target="_blank" rel="external">http://yoursite.com/2018/02/20/linux用ssh做反向代理/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Weiye Lee">
+            Weiye Lee
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubantu/">ubantu</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/&title=《linux用ssh做反向代理》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/&title=《linux用ssh做反向代理》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/02/20/linux用ssh做反向代理/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux用ssh做反向代理》 — Weiye's Blog&url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/03/07/仿QQ右上角的弹出菜单框/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">仿QQ右上角的弹出菜单框</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/02/18/ubantu源码安装postgresql/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">ubantu源码安装postgresql</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Weiye Lee &copy; 2015 - 2022</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/&title=《linux用ssh做反向代理》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/&title=《linux用ssh做反向代理》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/02/20/linux用ssh做反向代理/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《linux用ssh做反向代理》 — Weiye's Blog&url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/02/20/linux用ssh做反向代理/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACK0lEQVR42u3ay46DMAwF0P7/TzPbSh3SawcqkRxWiEfIYWHFdl6v+Djejs8r79fHz5/dHV+/7MDAwHgs4xgeCWM8cv6t5GedfhcDA2MDxngSZ+fjYJoE3OTJ5AdhYGBgjKc+Hqc6JgYGBsZ9ATdfPiaLTgwMDIxeEltdDlZD849ycQwMjAcy8qr7789v6W9gYGA8inEUj3ycPCmtBtl/voWBgbE0o1om6xXmZgJ3YT4YGBgbMKptyN4KbaaQVyi3YWBgLMQYP1Qoygdv5e+WN3lgYGBswOi1IXuhc4Z0+nUMDIxtGNWNF9VGY7KZtRnWMTAwtmTk08pLY71CXjQaBgbG0ox8KVYNxL0tXElSfboAxcDAWJpx9zaIBJY3J76EaQwMjEUZ1ZQyD4vzS8/CUhIDA2NRRvW1XkCsbuYoNxUwMDA2YORJZrVYlrQTkmS4uWcEAwNjCUZyO2895m3OpGFwcT8WAwPj4Yz58Fqu7V3bDMDAwNiAMV/6r4bg+T9dqBpiYGAsxKiGxaQoljdHZ7aUYWBg7MbopZ3VNDhpBlRbBRgYGDswZlLZ3rR6WXVhXxsGBsYSjPmUNZloL5jmLU8MDIy1GXcE2Wvblr20GQMDYz1GtWSfT6t3t9k2wMDA2ICRB75qiJwfP/o1GBgYGPEzMxsyphqfGBgYGK1lYnI3T2u/hHIMDIwNGEkSm6eXSTFuvp2AgYGxD6OaOlabnVdNotdmwMDAeDjjD1QwdHKbv9TWAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
