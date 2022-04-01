@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Flutter状态管理之路（四） | Weiye&#39;s Blog | 好好学习,天天向上</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="flutter">
+    <meta name="description" content="接上一篇Flutter状态管理之路（三）此篇主要介绍flutter_mobx flutter_mobx版本： dependencies:  mobx: ^0.4.0  flutter_mobx: ^0.3.4 dev_dependencies:  build_runner: ^1.3.1  mobx_codegen: ^0.3.11 文档：https://mobx.pub/ 概念   对象 说明">
+<meta name="keywords" content="flutter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter状态管理之路（四）">
+<meta property="og:url" content="http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/index.html">
+<meta property="og:site_name" content="Weiye&#39;s Blog">
+<meta property="og:description" content="接上一篇Flutter状态管理之路（三）此篇主要介绍flutter_mobx flutter_mobx版本： dependencies:  mobx: ^0.4.0  flutter_mobx: ^0.3.4 dev_dependencies:  build_runner: ^1.3.1  mobx_codegen: ^0.3.11 文档：https://mobx.pub/ 概念   对象 说明">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13098410-ff34fa76975d9ee6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13098410-30208455f2829385.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13098410-9bb65e00ee506002.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2022-04-01T15:58:07.600Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flutter状态管理之路（四）">
+<meta name="twitter:description" content="接上一篇Flutter状态管理之路（三）此篇主要介绍flutter_mobx flutter_mobx版本： dependencies:  mobx: ^0.4.0  flutter_mobx: ^0.3.4 dev_dependencies:  build_runner: ^1.3.1  mobx_codegen: ^0.3.11 文档：https://mobx.pub/ 概念   对象 说明">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13098410-ff34fa76975d9ee6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="Weiye&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Weiye Lee</h5>
+          <a href="mailto:9011532@qq.com" title="9011532@qq.com" class="mail">9011532@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/itlwy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/Weiye__Lee" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/889c25a46410" target="_blank" >
+                <i class="icon icon-lg icon-book"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Flutter状态管理之路（四）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Flutter状态管理之路（四）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2022-03-30T02:13:30.000Z" itemprop="datePublished" class="page-time">
+  2022-03-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#flutter-mobx"><span class="post-toc-number">1.</span> <span class="post-toc-text">flutter_mobx</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概念"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概念</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用例子"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">使用例子</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图示"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">图示</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关键对象"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">关键对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Counter"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">_$Counter</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Observer"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">Observer</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Computed"><span class="post-toc-number">1.4.2.1.</span> <span class="post-toc-text">Computed</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">总结</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Flutter状态管理之路（四）"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Flutter状态管理之路（四）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2022-03-30 10:13:30" datetime="2022-03-30T02:13:30.000Z"  itemprop="datePublished">2022-03-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>接上一篇<a href="https://www.jianshu.com/p/6fae341cb856" target="_blank" rel="noopener">Flutter状态管理之路（三）</a><br>此篇主要介绍flutter_mobx</p>
+<h2 id="flutter-mobx"><a href="#flutter-mobx" class="headerlink" title="flutter_mobx"></a>flutter_mobx</h2><p>版本：</p>
+<p>dependencies:<br>  mobx: ^0.4.0<br>  flutter_mobx: ^0.3.4</p>
+<p>dev_dependencies:<br>  build_runner: ^1.3.1<br>  mobx_codegen: ^0.3.11</p>
+<p>文档：<a href="https://mobx.pub/" target="_blank" rel="noopener">https://mobx.pub/</a></p>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>说明</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Observables</td>
+<td>代表响应式状态，可以是普通dart对象，<br>也可以是一颗状态树，变化会触发reaction</td>
+<td></td>
+</tr>
+<tr>
+<td>Computed</td>
+<td>计算属性，根据多个Observables来源计算出<br>其应该输出的值，有缓存，不使用会清空，<br>源改变会触发重新计算，变化也会触发reaction</td>
+<td></td>
+</tr>
+<tr>
+<td>Actions</td>
+<td>响应改变Observables的地方</td>
+<td></td>
+</tr>
+<tr>
+<td>Reactions</td>
+<td>对Action、Observable、Computed三元素响应的地方，<br>可以是Widget/函数</td>
+<td></td>
+</tr>
+<tr>
+<td>Observer</td>
+<td>上述Reaction的一个具体实现，用于Flutter中包裹需要响应<br>Observable的子树</td>
+</tr>
+</tbody>
+</table>
+<p>概念图(来自mobx.pub):</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/13098410-ff34fa76975d9ee6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图来自mobx.pub" title>
+                </div>
+                <div class="image-caption">图来自mobx.pub</div>
+            </figure>
+<h3 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h3><p>来自官网 计数器Demo</p>
+<ol>
+<li>定义Store，新建counter.dart</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">// Include generated file</span><br><span class="line">part &apos;counter.g.dart&apos;;   /// 利用注解解析生成代码</span><br><span class="line"></span><br><span class="line">// This is the class used by rest of your codebase</span><br><span class="line">class Counter = _Counter with _$Counter;</span><br><span class="line"></span><br><span class="line">// The store-class</span><br><span class="line">abstract class _Counter with Store &#123;</span><br><span class="line">  @observable</span><br><span class="line">  int value = 0;</span><br><span class="line"></span><br><span class="line">  @action</span><br><span class="line">  void increment() &#123;</span><br><span class="line">    value++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>main.dart</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">final counter = Counter(); // 1. 初始化Store</span><br><span class="line"></span><br><span class="line">void main() =&gt; runApp(MyApp());</span><br><span class="line"></span><br><span class="line">class MyApp extends StatelessWidget &#123;</span><br><span class="line">  // This widget is the root of your application.</span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return MaterialApp(</span><br><span class="line">      title: &apos;MobX&apos;,</span><br><span class="line">      theme: ThemeData(</span><br><span class="line">        primarySwatch: Colors.blue,</span><br><span class="line">      ),</span><br><span class="line">      home: const MyHomePage(),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MyHomePage extends StatelessWidget &#123;</span><br><span class="line">  const MyHomePage();</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(&apos;MobX Counter&apos;),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(</span><br><span class="line">        child: Column(</span><br><span class="line">          mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Text(</span><br><span class="line">              &apos;You have pushed the button this many times:&apos;,</span><br><span class="line">            ),</span><br><span class="line">            // Wrapping in the Observer will automatically re-render on changes to counter.value</span><br><span class="line">            Observer(   /// 2. 用Observer包裹 使用counter  会自动建立订阅关系</span><br><span class="line">              builder: (_) =&gt; Text(</span><br><span class="line">                &apos;$&#123;counter.value&#125;&apos;,</span><br><span class="line">                style: Theme.of(context).textTheme.display1,</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">      floatingActionButton: FloatingActionButton(</span><br><span class="line">        onPressed: counter.increment,   /// 3. 调用Observer的setter方法 通知更新</span><br><span class="line">        tooltip: &apos;Increment&apos;,</span><br><span class="line">        child: Icon(Icons.add),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="图示"><a href="#图示" class="headerlink" title="图示"></a>图示</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/13098410-30208455f2829385.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="flutter_mobx主流程图1.png" title>
+                </div>
+                <div class="image-caption">flutter_mobx主流程图1.png</div>
+            </figure>
+<h3 id="关键对象"><a href="#关键对象" class="headerlink" title="关键对象"></a>关键对象</h3><p>以上述计数器例子来分析下源码中关键对象</p>
+<h4 id="Counter"><a href="#Counter" class="headerlink" title="_$Counter"></a>_$Counter</h4><p>该对象由代码生成器生成，主要实现扩展自定义的dart object的Observable的能力</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">mixin _$Counter on _Counter, Store &#123; </span><br><span class="line">  /// Store只是起标识作用的mixin</span><br><span class="line">  /// _Counter是我们自定义的状态对象</span><br><span class="line">  </span><br><span class="line">  final _$valueAtom = Atom(name: &apos;_Counter.value&apos;); /// 根据@observable标识的变量，生成的对应的Atom对象，用于与Reactions实现观察者模式</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  int get value &#123;</span><br><span class="line">  /// 属性value的getter  根据@observable生成</span><br><span class="line">    _$valueAtom.context.enforceReadPolicy(_$valueAtom); /// 用于限制此方法是否能在非Actions和Reactions里调用，默认允许，否则抛出assert异常</span><br><span class="line">    _$valueAtom.reportObserved();	/// 注册观察者(Reaction)</span><br><span class="line">    return super.value;		/// 返回值</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  set value(int value) &#123;</span><br><span class="line">    _$valueAtom.context.conditionallyRunInAction(() &#123;</span><br><span class="line">    	/// conditionallyRunInAction 用于判断写入的安全策略和是否包含action的追踪</span><br><span class="line">      super.value = value;  /// 赋值的地方</span><br><span class="line">      _$valueAtom.reportChanged();  /// 通知注册在valueAtom里的Observer刷新数据</span><br><span class="line">    &#125;, _$valueAtom, name: &apos;$&#123;_$valueAtom.name&#125;_set&apos;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  final _$_CounterActionController = ActionController(name: &apos;_Counter&apos;);	/// 根据@action生成，用于记录action调用情况</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void increment() &#123;</span><br><span class="line">    final _$actionInfo = _$_CounterActionController.startAction(); /// 记录开始</span><br><span class="line">    try &#123;</span><br><span class="line">      return super.increment();		/// 真正执行定义的increment方法</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">      _$_CounterActionController.endAction(_$actionInfo); /// 记录完成</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码片段里的<code>_$valueAtom.context</code>是每个Atom里默认取的全局的MainContext，看Atom构造：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Atom &#123;</span><br><span class="line">  factory Atom(</span><br><span class="line">          &#123;String name,</span><br><span class="line">          Function() onObserved,</span><br><span class="line">          Function() onUnobserved,</span><br><span class="line">          ReactiveContext context&#125;) =&gt;</span><br><span class="line">      Atom._(context ?? mainContext,   /// 注意此处，参数不传会使用mainContext</span><br><span class="line">          name: name, onObserved: onObserved, onUnobserved: onUnobserved);</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看下几个重点方法：</p>
+<ol>
+<li><code>_$valueAtom.context.conditionallyRunInAction</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void conditionallyRunInAction(void Function() fn, Atom atom,</span><br><span class="line">      &#123;String name, ActionController actionController&#125;) &#123;</span><br><span class="line">    if (isWithinBatch) &#123;</span><br><span class="line">    /// 当在action、reaction里执行时，直接进入此处</span><br><span class="line">      enforceWritePolicy(atom);  /// 检查写入权限，如是否可在非action外进行写入等</span><br><span class="line">      fn();			/// 执行真正赋值的地方</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">    /// 非 action or transaction 里执行走这</span><br><span class="line">      final controller = actionController ??</span><br><span class="line">          ActionController(</span><br><span class="line">              context: this, name: name ?? nameFor(&apos;conditionallyRunInAction&apos;));</span><br><span class="line">      final runInfo = controller.startAction();  /// 记录action开始</span><br><span class="line"></span><br><span class="line">      try &#123;</span><br><span class="line">        enforceWritePolicy(atom);</span><br><span class="line">        fn();</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        controller.endAction(runInfo);   ///  记录action结束</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><code>_$valueAtom.reportObserved()</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">	/// Atom</span><br><span class="line">void reportObserved() &#123;</span><br><span class="line">	 _context._reportObserved(this);</span><br><span class="line">  &#125;</span><br><span class="line">	/// ReactiveContext</span><br><span class="line">  void _reportObserved(Atom atom) &#123;</span><br><span class="line">    final derivation = _state.trackingDerivation;  /// 取出当前正在执行的reactions or computeds</span><br><span class="line">	</span><br><span class="line">    if (derivation != null) &#123;</span><br><span class="line">      derivation._newObservables.add(atom);  /// 将当前atom绑进derivation里</span><br><span class="line">      if (!atom._isBeingObserved) &#123;</span><br><span class="line">      /// 如果atom之前并没有被加入观察，则执行此处</span><br><span class="line">        atom</span><br><span class="line">          .._isBeingObserved = true</span><br><span class="line">          .._notifyOnBecomeObserved();	/// 通知Observable 的所有listener - 其变为被观察状态</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>上面可以看出，atom被加入到当前reaction(derivation)的监听集合里,即reaction持有了atom，但是atom改变时是需要通知到reaction的，继续看下面</p>
+<ol start="3">
+<li><code>_$valueAtom.reportChanged()</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">/// Atom</span><br><span class="line">void reportChanged() &#123;</span><br><span class="line">   _context</span><br><span class="line">     ..startBatch()   /// batch计数+1 ，记录当前batch的深度，用来追踪如action执行的深度</span><br><span class="line">     ..propagateChanged(this)	/// 通知注册在atom里的observer（即Derivation）数据改变</span><br><span class="line">     ..endBatch();  /// 执行完毕，batch计数-1并检查batch执行深度是否归0，此处是做了层优化</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> /// ReactiveContext</span><br><span class="line"> void propagateChanged(Atom atom) &#123;</span><br><span class="line">  ...</span><br><span class="line">   atom._lowestObserverState = DerivationState.stale;</span><br><span class="line"></span><br><span class="line">   for (final observer in atom._observers) &#123;</span><br><span class="line">     if (observer._dependenciesState == DerivationState.upToDate) &#123;</span><br><span class="line">       observer._onBecomeStale();  /// 通知所有注册的即Derivation数据改变</span><br><span class="line">     &#125;</span><br><span class="line">     observer._dependenciesState = DerivationState.stale;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> void endBatch() &#123;</span><br><span class="line">   if (--_state.batch == 0) &#123; /// 优化：当前执行改变的层次没回归0时，跳过最终的reaction响应，只有全部执行完毕才走下面的逻辑 (个人理解:因为是单线程，此处考虑的应该是递归情况，如action里再调用action)</span><br><span class="line">     runReactions(); </span><br><span class="line">     /// 通知挂起的reactions 数据改变</span><br><span class="line">     ///  List&lt;Reaction&gt; pendingReactions = [];</span><br><span class="line">       /// The reactions that must be triggered at the end of a `transaction` or an `action`</span><br><span class="line"></span><br><span class="line">     for (var i = 0; i &lt; _state.pendingUnobservations.length; i++) &#123;</span><br><span class="line">     /// 这里处理断开连接的observations 如dispose掉</span><br><span class="line">       final ob = _state.pendingUnobservations[i]</span><br><span class="line">         .._isPendingUnobservation = false;</span><br><span class="line"></span><br><span class="line">       if (ob._observers.isEmpty) &#123;</span><br><span class="line">         if (ob._isBeingObserved) &#123;</span><br><span class="line">           // if this observable had reactive observers, trigger the hooks</span><br><span class="line">           ob</span><br><span class="line">             .._isBeingObserved = false</span><br><span class="line">             .._notifyOnBecomeUnobserved();</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line">         if (ob is Computed) &#123;</span><br><span class="line">           ob._suspend();</span><br><span class="line">         &#125;</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     _state.pendingUnobservations = [];</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>基本上，<code>_$Counter</code>就是对<code>@observable</code>注解的变量扩展getter、setter方法，getter里将变量对应的atom绑进当前执行的<code>derivation</code>里去；在setter里去通知atom里的<code>_observers</code>集合。</p>
+<p><code>@action</code>注解的方法，则会被包含进<code>_$_CounterActionController</code>控制里，记录action执行情况</p>
+<p>但是atom._observers里的元素是什么时候注册的，按照mobx的理念是在reaction里引用过Observable，则自动tracking，所以接下来看<code>Observer</code></p>
+<h4 id="Observer"><a href="#Observer" class="headerlink" title="Observer"></a>Observer</h4><p>flutter中作为UI的响应式组件，简单看下类图</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/13098410-9bb65e00ee506002.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="mobx_observer.png" title>
+                </div>
+                <div class="image-caption">mobx_observer.png</div>
+            </figure>
+<p>如上图，StatelessObserverWidget extends StatelessWidget，框架主要通过<code>ObserverWidgetMixin</code>和<code>ObserverElementMixin</code>来扩展功能</p>
+<ol>
+<li><code>ObserverWidgetMixin</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mixin ObserverWidgetMixin on Widget &#123;</span><br><span class="line">  String getName();</span><br><span class="line"></span><br><span class="line">  ReactiveContext getContext() =&gt; mainContext;</span><br><span class="line"></span><br><span class="line">  Reaction createReaction(</span><br><span class="line">    Function() onInvalidate, &#123;</span><br><span class="line">    Function(Object, Reaction) onError,</span><br><span class="line">  &#125;) =&gt;</span><br><span class="line">      ReactionImpl(</span><br><span class="line">        getContext(),</span><br><span class="line">        onInvalidate,</span><br><span class="line">        name: getName(),</span><br><span class="line">        onError: onError,</span><br><span class="line">      );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基本上就是扩展了 1) 创建Reaction  2) 获取mainContext 全局响应式上下文</p>
+<ol start="2">
+<li><code>ObserverElementMixin</code></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">mixin ObserverElementMixin on ComponentElement &#123;</span><br><span class="line">  ReactionImpl get reaction =&gt; _reaction;</span><br><span class="line">  ReactionImpl _reaction;  /// 包裹的响应类</span><br><span class="line"></span><br><span class="line">  ObserverWidgetMixin get _widget =&gt; widget as ObserverWidgetMixin;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void mount(Element parent, dynamic newSlot) &#123;</span><br><span class="line">  /// 挂载Element 时 创建Reaction</span><br><span class="line">    _reaction = _widget.createReaction(invalidate, onError: (e, _) &#123;</span><br><span class="line">      FlutterError.reportError(FlutterErrorDetails(</span><br><span class="line">        library: &apos;flutter_mobx&apos;,</span><br><span class="line">        exception: e,</span><br><span class="line">        stack: e is Error ? e.stackTrace : null,</span><br><span class="line">      ));</span><br><span class="line">    &#125;) as ReactionImpl;</span><br><span class="line">    super.mount(parent, newSlot);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void invalidate() =&gt; markNeedsBuild();	/// Observable改变时会通知到这里 标脏</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build() &#123;</span><br><span class="line">    Widget built;</span><br><span class="line"></span><br><span class="line">    reaction.track(() &#123;  /// 每次挂载上Element树上会启动reaction的track，在这里面建立在传入的build方法里(即Observer的build属性) 获取过的Observable的关联</span><br><span class="line">      built = super.build();	/// 调用外部传入的build方法 建立Widget子树</span><br><span class="line">    &#125;);</span><br><span class="line">	...</span><br><span class="line">    return built;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void unmount() &#123;</span><br><span class="line">  /// 卸载Element 时 卸载Reaction</span><br><span class="line">    reaction.dispose();</span><br><span class="line">    super.unmount();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来重点看<code>reaction.track</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/// ReactionImpl</span><br><span class="line">  void track(void Function() fn) &#123;</span><br><span class="line">    _context.startBatch();  /// batch次数+1</span><br><span class="line"></span><br><span class="line">    _isRunning = true;</span><br><span class="line">    _context.trackDerivation(this, fn);  /// 开始追踪这个derivation即此时的reaction</span><br><span class="line">    _isRunning = false;</span><br><span class="line"></span><br><span class="line">    if (_isDisposed) &#123;</span><br><span class="line">      _context._clearObservables(this);   /// dispose的话 清理</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (_context._hasCaughtException(this)) &#123;</span><br><span class="line">      _reportException(_errorValue._exception);  </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _context.endBatch();  /// 此处理操作完成</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>进入<code>_context.trackDerivation</code>方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">/// ReactiveContext </span><br><span class="line">  T trackDerivation&lt;T&gt;(Derivation d, T Function() fn) &#123;</span><br><span class="line">    final prevDerivation = _startTracking(d);  /// 让mainContext开始追踪传入的derivation</span><br><span class="line">    T result;</span><br><span class="line"></span><br><span class="line">    if (config.disableErrorBoundaries == true) &#123;</span><br><span class="line">      result = fn();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">        result = fn();  /// 这里调用Observer里传入的build函数，里面会调用Observable的getter方法，上面提到的derivation就是这个d，所以atom会注册到这个d里面去</span><br><span class="line">        d._errorValue = null;</span><br><span class="line">      &#125; on Object catch (e) &#123;</span><br><span class="line">        d._errorValue = MobXCaughtException(e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _endTracking(d, prevDerivation);  /// 结束追踪</span><br><span class="line">    return result;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>进入<code>_startTracking(d)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/// ReactiveContext </span><br><span class="line">Derivation _startTracking(Derivation derivation) &#123;</span><br><span class="line">  final prevDerivation = _state.trackingDerivation;  </span><br><span class="line">  _state.trackingDerivation = derivation;  /// 将传入的derivation赋值为当前正在追踪的，所以从这之后调用的Observable的getter方法里拿到的都是它</span><br><span class="line"></span><br><span class="line">  _resetDerivationState(derivation); /// 重置derivation状态</span><br><span class="line">  derivation._newObservables = &#123;&#125;;	/// 清空，方便之后的atom加入</span><br><span class="line"></span><br><span class="line">  return prevDerivation;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进入<code>_endTracking(d, prevDerivation)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void _endTracking(Derivation currentDerivation, Derivation prevDerivation) &#123;</span><br><span class="line">  _state.trackingDerivation = prevDerivation;</span><br><span class="line">  _bindDependencies(currentDerivation);  /// 绑定derivation依赖的Observables</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>进入<code>_bindDependencies(currentDerivation)</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">void _bindDependencies(Derivation derivation) &#123;</span><br><span class="line">   final staleObservables =</span><br><span class="line">       derivation._observables.difference(derivation._newObservables);  /// 取出不一致的observable集合</span><br><span class="line">   final newObservables =</span><br><span class="line">       derivation._newObservables.difference(derivation._observables); /// 取出新的observable集合</span><br><span class="line">   var lowestNewDerivationState = DerivationState.upToDate;</span><br><span class="line"></span><br><span class="line">   // Add newly found observables</span><br><span class="line">   for (final observable in newObservables) &#123;</span><br><span class="line">     observable._addObserver(derivation);   /// 关键点1 这里将此derivation添加到Observable的_observers集合里，即在这里实现了atom持有derivation</span><br><span class="line"></span><br><span class="line">     // Computed = Observable + Derivation</span><br><span class="line">     if (observable is Computed) &#123;</span><br><span class="line">       if (observable._dependenciesState.index &gt;</span><br><span class="line">           lowestNewDerivationState.index) &#123;</span><br><span class="line">         lowestNewDerivationState = observable._dependenciesState;</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   // Remove previous observables</span><br><span class="line">   for (final ob in staleObservables) &#123;</span><br><span class="line">     ob._removeObserver(derivation);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   if (lowestNewDerivationState != DerivationState.upToDate) &#123;</span><br><span class="line">     derivation</span><br><span class="line">       .._dependenciesState = lowestNewDerivationState</span><br><span class="line">       .._onBecomeStale();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   derivation</span><br><span class="line">     .._observables = derivation._newObservables</span><br><span class="line">     .._newObservables = &#123;&#125;; // No need for newObservables beyond this point</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>如上关键点1，将derivation里关联的observable拿到，并将derivation注入到每个observable里，这里为止实现了observable和derivation的双向绑定</p>
+<h5 id="Computed"><a href="#Computed" class="headerlink" title="Computed"></a>Computed</h5><p>该对象由@computed生成，充当Atom和Derivation的双重身份，即作为Atom给Observer等Reaction来观察，作为Derivation其方法里调用了其他的Atom，会监听其他的Atom的变化来触发自身的改变</p>
+<p>看下自己定义的类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">abstract class _Counter with Store &#123;</span><br><span class="line">  @observable</span><br><span class="line">  int value = 0;</span><br><span class="line"></span><br><span class="line">  @action</span><br><span class="line">  void increment() &#123;</span><br><span class="line">    value++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @computed</span><br><span class="line">  int get testCmp =&gt; value + 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>生成的<code>counter.g.dart</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mixin _$Counter on _Counter, Store &#123;</span><br><span class="line">  Computed&lt;int&gt; _$testCmpComputed;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  int get testCmp =&gt;</span><br><span class="line">      (_$testCmpComputed ??= Computed&lt;int&gt;(() =&gt; super.testCmp)).value;</span><br><span class="line">  ...    </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出，实际就是生成了一个Computed来包裹我们定义的testCmp getter方法，下面看Computed的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class Computed&lt;T&gt; extends Atom implements Derivation, ObservableValue&lt;T&gt; &#123;</span><br><span class="line">	factory Computed(T Function() fn, &#123;String name, ReactiveContext context&#125;) =&gt;</span><br><span class="line">      Computed._(context ?? mainContext, fn, name: name);</span><br><span class="line"></span><br><span class="line">  Computed._(ReactiveContext context, this._fn, &#123;String name&#125;)</span><br><span class="line">      : super._(context, name: name ?? context.nameFor(&apos;Computed&apos;));</span><br><span class="line">      ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出，具备了Atom和Derivation的特性，构造函数里比Atom多持有了外部的传入的(即我们自己定义的)方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">class Computed&lt;T&gt; extends Atom implements Derivation, ObservableValue&lt;T&gt; &#123;</span><br><span class="line">	...</span><br><span class="line">  T _value;  /// 缓存的value</span><br><span class="line">  </span><br><span class="line">	 @override</span><br><span class="line">  T get value &#123;</span><br><span class="line">	...</span><br><span class="line">    if (!_context.isWithinBatch &amp;&amp; _observers.isEmpty) &#123;</span><br><span class="line">    /// 如果没在action or transaction里执行 并且 被其作为atom _observers内无观察者时</span><br><span class="line">      if (_context._shouldCompute(this)) &#123;  /// 判断其是否需要重新计算新的值，因为涉及到以及缓存</span><br><span class="line">        _context.startBatch();</span><br><span class="line">        _value = computeValue(track: false);  /// 计算新的值 且不将自己作为derivation利用mainContext进行追踪</span><br><span class="line">        _context.endBatch();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      reportObserved();		/// 自己作为atom 被reaction调用时，上报自己给derivation监听</span><br><span class="line">      if (_context._shouldCompute(this)) &#123;</span><br><span class="line">        if (_trackAndCompute()) &#123;		/// 开启reaction的追踪并计算新值</span><br><span class="line">          _context._propagateChangeConfirmed(this);		/// 标记其持有的_observers 的依赖状态为脏</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">    return _value;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">   @override</span><br><span class="line">  void _suspend() &#123;</span><br><span class="line">    _context._clearObservables(this);</span><br><span class="line">    _value = null;  /// 挂起时清除_value缓存值</span><br><span class="line">  &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码片段重点三个方法：<code>_context._shouldCompute</code>、<code>computeValue(track: false)</code>、<code>_trackAndCompute()</code></p>
+<p><strong><code>_context._shouldCompute</code></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">bool _shouldCompute(Derivation derivation) &#123;</span><br><span class="line">    switch (derivation._dependenciesState) &#123;</span><br><span class="line">      case DerivationState.upToDate:</span><br><span class="line">        return false;</span><br><span class="line"></span><br><span class="line">      case DerivationState.notTracking:</span><br><span class="line">      case DerivationState.stale:</span><br><span class="line">        return true;</span><br><span class="line"></span><br><span class="line">      case DerivationState.possiblyStale:</span><br><span class="line">        return untracked(() &#123;</span><br><span class="line">          for (final obs in derivation._observables) &#123;  /// 遍历其使用过的Atom</span><br><span class="line">            if (obs is Computed) &#123;  /// 判断依赖的atom是否也是Computed，是的话需要处罚依赖去计算新的值</span><br><span class="line">              // Force a computation</span><br><span class="line">              if (config.disableErrorBoundaries == true) &#123;</span><br><span class="line">                obs.value;  /// 触发计算新的值</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                  obs.value;</span><br><span class="line">                &#125; on Object catch (_) &#123;</span><br><span class="line">                  return true;</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">              if (derivation._dependenciesState == DerivationState.stale) &#123;</span><br><span class="line">                return true;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          _resetDerivationState(derivation);   </span><br><span class="line">          return false;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return false;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p><strong><code>computeValue(track: false)</code></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">T computeValue(&#123;bool track&#125;) &#123;</span><br><span class="line">    _isComputing = true;</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">    T value;</span><br><span class="line">    if (track) &#123;</span><br><span class="line">      value = _context.trackDerivation(this, _fn); /// 让computed作为derivation身份，调用_fn前利用ReactiveContext开启tracking模式</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">		...</span><br><span class="line">        value = _fn();  /// 计算获取新的值</span><br><span class="line">		...</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">    _isComputing = false;</span><br><span class="line"></span><br><span class="line">    return value;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p><strong><code>_trackAndCompute()</code></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">bool _trackAndCompute() &#123;</span><br><span class="line">    final oldValue = _value;</span><br><span class="line">    final wasSuspended = _dependenciesState == DerivationState.notTracking;</span><br><span class="line"></span><br><span class="line">    final newValue = computeValue(track: true);  /// 计算新值通知开启ReactiveContext的追踪</span><br><span class="line"></span><br><span class="line">    final changed = wasSuspended ||</span><br><span class="line">        _context._hasCaughtException(this) ||</span><br><span class="line">        !_isEqual(oldValue, newValue);</span><br><span class="line"></span><br><span class="line">    if (changed) &#123;</span><br><span class="line">      _value = newValue;  /// 赋新值</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return changed;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>优点：</p>
+<ol>
+<li>observer的组件真正实现按需更新，只有监听的数据发生变化，它才会re-render</li>
+<li>具备Computer计算属性机制，无引用时会自动回收</li>
+<li>使用注解省去了notify等模板代码，简洁</li>
+<li>mobx耦合性更低</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>store过多导致无法统一数据源，管理是个问题</li>
+<li>没有时间回溯能力，因为数据只有一份引用</li>
+<li>缺乏中间件机制有效支持</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2022-04-01T15:58:07.600Z" itemprop="dateUpdated">2022-04-01 23:58:07</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2022/03/30/Flutter状态管理之路（四）/" target="_blank" rel="external">http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Weiye Lee">
+            Weiye Lee
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flutter/">flutter</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/&title=《Flutter状态管理之路（四）》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/&title=《Flutter状态管理之路（四）》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Flutter状态管理之路（四）》 — Weiye's Blog&url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2022/03/30/Flutter状态管理之路（五）/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Flutter状态管理之路（五）</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2022/03/28/Flutter状态管理之路（一）/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Flutter状态管理之路（一）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Weiye Lee &copy; 2015 - 2022</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/&title=《Flutter状态管理之路（四）》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/&title=《Flutter状态管理之路（四）》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Flutter状态管理之路（四）》 — Weiye's Blog&url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（四）/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACuUlEQVR42u3a224CMQwFwP7/T1OpT5XaDcf2ulBp9glxWTJBSsxxPj7i6/F1nV/9/p6rZ873/PmpfAyjCw8PD6819Kvr/MVX78+RCeA8nvMY8PDw8PZ45y9LhnjGJJ/q3fmJBQ8PD++lvPPS3CuL5xOHh4eH9x95vTSgup3g4eHhvRsvGUQewuYFdHKdp/u2rAUPDw8v5lUbYO/weLG/h4eHhzfoqvcW7mQpz4OJfDP4ZVR4eHh4C7ykVK0erro3vKhGxk+yFjw8PLwxr1fIThbrarhQjUJG/wPw8PDwAt7kf33v0NV5EHkZXR0bHh4e3gavt3xXt4czprrEFwp3PDw8vFt5eZMpj1nnEzePffHw8PC2edXh5kt5b6HPA188PDy8V/EmpKjPFhTEyaRUAxE8PDy8e3l52ZrECr2NodfoSqYbDw8P7y955b2lWEBXt5D84EK5n4aHh4fX4uVNrF6UMDlclU9reSbw8PDwWrxe3HAe+qRZ1Tt8EOHx8PDwbuIlf/V7kW4+6Grrq3B8AQ8PD2+ZNw9zJ+HvI76SnwEPDw9vj5cPq9fiKizirXi3PFo8PDy8W3nVhT4PW3txbbPpdXV/PDw8vAVeNTjIYXcFu5PyHQ8PD+8uXn67XgOs0H9rhbZP7oyHh4e3xsubUvlWUQ01qq9GRTYeHh7eAq8XAVSD2mSryLeiZPPAw8PD2+PlDf48nK1uBvkvUJ1uPDw8vA1eoXUUt7gmQUYvsMhHjoeHhzfnPYpXfqQgAU8OaUWFOx4eHt4Cb7LszttdecDRO4iAh4eHt8fLW1zzYrd6MGu+CeHh4eHt8faGVQ1wJ8ez8PDw8N6TNy+F81ihWohfnizDw8PDexFv/rh67GAEw8PDw1vmVcOIavnbO4w1L/3x8PDwNniTBli1jO5NVu8gFx4eHt4C7xOP+pKX6U2q5wAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

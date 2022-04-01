@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Flutter状态管理之路（三） | Weiye&#39;s Blog | 好好学习,天天向上</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="flutter">
+    <meta name="description" content="接上一篇 Flutter状态管理之路（二），此篇主要介绍Flutter_Bloc Flutter_Bloc版本：bloc 3.0.0 flutter_bloc 3.0.0 库地址：https://github.com/felangel/bloc 全称为 Business Logic Component,表示为业务逻辑组件,简称 BLoC 概念   对象 说明     Event 表示触发某个状态改">
+<meta name="keywords" content="flutter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter状态管理之路（三）">
+<meta property="og:url" content="http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/index.html">
+<meta property="og:site_name" content="Weiye&#39;s Blog">
+<meta property="og:description" content="接上一篇 Flutter状态管理之路（二），此篇主要介绍Flutter_Bloc Flutter_Bloc版本：bloc 3.0.0 flutter_bloc 3.0.0 库地址：https://github.com/felangel/bloc 全称为 Business Logic Component,表示为业务逻辑组件,简称 BLoC 概念   对象 说明     Event 表示触发某个状态改">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13098410-cb194f2933f3f8f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13098410-89580c8f8ec4ed07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2022-04-01T15:57:33.014Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flutter状态管理之路（三）">
+<meta name="twitter:description" content="接上一篇 Flutter状态管理之路（二），此篇主要介绍Flutter_Bloc Flutter_Bloc版本：bloc 3.0.0 flutter_bloc 3.0.0 库地址：https://github.com/felangel/bloc 全称为 Business Logic Component,表示为业务逻辑组件,简称 BLoC 概念   对象 说明     Event 表示触发某个状态改">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13098410-cb194f2933f3f8f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="Weiye&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Weiye Lee</h5>
+          <a href="mailto:9011532@qq.com" title="9011532@qq.com" class="mail">9011532@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/itlwy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/Weiye__Lee" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/889c25a46410" target="_blank" >
+                <i class="icon icon-lg icon-book"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Flutter状态管理之路（三）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Flutter状态管理之路（三）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2022-03-30T02:13:30.000Z" itemprop="datePublished" class="page-time">
+  2022-03-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Flutter-Bloc"><span class="post-toc-number">1.</span> <span class="post-toc-text">Flutter_Bloc</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概念"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">概念</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用例子"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">使用例子</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图示"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">图示</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关键对象"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">关键对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Bloc"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">Bloc</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#BlocBuilder"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">BlocBuilder</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#BlocProvider"><span class="post-toc-number">1.4.3.</span> <span class="post-toc-text">BlocProvider</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#进阶"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">进阶</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">总结</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Flutter状态管理之路（三）"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Flutter状态管理之路（三）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2022-03-30 10:13:30" datetime="2022-03-30T02:13:30.000Z"  itemprop="datePublished">2022-03-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>接上一篇 <a href="https://www.jianshu.com/p/913e111e2232" target="_blank" rel="noopener">Flutter状态管理之路（二）</a>，<br>此篇主要介绍Flutter_Bloc</p>
+<h2 id="Flutter-Bloc"><a href="#Flutter-Bloc" class="headerlink" title="Flutter_Bloc"></a>Flutter_Bloc</h2><p>版本：bloc 3.0.0 flutter_bloc 3.0.0</p>
+<p>库地址：<a href="https://github.com/felangel/bloc" target="_blank" rel="noopener">https://github.com/felangel/bloc</a></p>
+<p>全称为 Business Logic Component,表示为业务逻辑组件,简称 <em>BLoC</em></p>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Event</td>
+<td>表示触发某个状态改变的事件</td>
+</tr>
+<tr>
+<td>State</td>
+<td>状态值</td>
+</tr>
+<tr>
+<td>Stream</td>
+<td>用于传输各个时刻的状态值的流</td>
+</tr>
+<tr>
+<td>Bloc</td>
+<td>“Bussiness Logic Component”即业务逻辑组件，响应Action、作出处理、通过stream输出新的状态</td>
+</tr>
+<tr>
+<td>BlocBuilder</td>
+<td>flutter组件，封装Bloc和组件响应State变化更新UI的逻辑</td>
+</tr>
+<tr>
+<td>BlocProvider</td>
+<td>利用DI注入使得子孙组件可以获取其绑定的Bloc</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h3><p>依然是计数器例子，官方Demo : <a href="https://bloclibrary.dev/#/fluttercountertutorial" target="_blank" rel="noopener">CounterPage</a></p>
+<ol>
+<li>counter_bloc.dart  </li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">enum CounterEvent &#123; increment, decrement &#125;  /// 1. 定义事件</span><br><span class="line"></span><br><span class="line">class CounterBloc extends Bloc&lt;CounterEvent, int&gt; &#123;   /// 2. 定义Bloc</span><br><span class="line">  @override</span><br><span class="line">  int get initialState =&gt; 0;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Stream&lt;int&gt; mapEventToState(CounterEvent event) async* &#123;</span><br><span class="line">  	/// 3. 定义根据Event作出的状态改变响应</span><br><span class="line">    switch (event) &#123; </span><br><span class="line">      case CounterEvent.decrement:</span><br><span class="line">        yield state - 1;</span><br><span class="line">        break;</span><br><span class="line">      case CounterEvent.increment:</span><br><span class="line">        yield state + 1;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ps : async* yield 异步生成器语法，用于生成异步序列：Stream</p>
+<ol start="2">
+<li>counter_page.dart</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">class CounterPage extends StatelessWidget &#123;</span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    final CounterBloc counterBloc = BlocProvider.of&lt;CounterBloc&gt;(context); 4. 子Widget获取</span><br><span class="line"></span><br><span class="line">    return Scaffold(</span><br><span class="line">      appBar: AppBar(title: Text(&apos;Counter&apos;)),</span><br><span class="line">      body: BlocBuilder&lt;CounterBloc, int&gt;(   5. 用BlocBuilder完成状态绑定</span><br><span class="line">        builder: (context, count) &#123;</span><br><span class="line">          return Center(</span><br><span class="line">            child: Text(</span><br><span class="line">              &apos;$count&apos;,</span><br><span class="line">              style: TextStyle(fontSize: 24.0),</span><br><span class="line">            ),</span><br><span class="line">          );</span><br><span class="line">        &#125;,</span><br><span class="line">      ),</span><br><span class="line">      floatingActionButton: Column(</span><br><span class="line">        crossAxisAlignment: CrossAxisAlignment.end,</span><br><span class="line">        mainAxisAlignment: MainAxisAlignment.end,</span><br><span class="line">        children: &lt;Widget&gt;[</span><br><span class="line">          Padding(</span><br><span class="line">            padding: EdgeInsets.symmetric(vertical: 5.0),</span><br><span class="line">            child: FloatingActionButton(</span><br><span class="line">              child: Icon(Icons.add),</span><br><span class="line">              onPressed: () &#123;</span><br><span class="line">                counterBloc.add(CounterEvent.increment);</span><br><span class="line">              &#125;,</span><br><span class="line">            ),</span><br><span class="line">          ),</span><br><span class="line">          Padding(</span><br><span class="line">            padding: EdgeInsets.symmetric(vertical: 5.0),</span><br><span class="line">            child: FloatingActionButton(</span><br><span class="line">              child: Icon(Icons.remove),</span><br><span class="line">              onPressed: () &#123;</span><br><span class="line">                counterBloc.add(CounterEvent.decrement);  /// 6.发出事件</span><br><span class="line">              &#125;,</span><br><span class="line">            ),</span><br><span class="line">          ),</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>app.dart</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class App extends StatelessWidget &#123;</span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return MaterialApp(</span><br><span class="line">            title: &apos;Flutter Demo&apos;,</span><br><span class="line">            home: BlocProvider(     /// 7. 注入Bloc实例</span><br><span class="line">              create: (context) =&gt; CounterBloc(),</span><br><span class="line">              child: CounterPage(),</span><br><span class="line">            ),</span><br><span class="line">            theme: theme,</span><br><span class="line">          );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="图示"><a href="#图示" class="headerlink" title="图示"></a>图示</h3><p>架构思想:</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/13098410-cb194f2933f3f8f5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="bloc_architecture.png" title>
+                </div>
+                <div class="image-caption">bloc_architecture.png</div>
+            </figure>
+<p>原理：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/13098410-89580c8f8ec4ed07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="bloc图示1.png" title>
+                </div>
+                <div class="image-caption">bloc图示1.png</div>
+            </figure>
+<h3 id="关键对象"><a href="#关键对象" class="headerlink" title="关键对象"></a>关键对象</h3><h4 id="Bloc"><a href="#Bloc" class="headerlink" title="Bloc"></a>Bloc</h4><p>“Bussiness Logic Component”即业务逻辑组件，响应Action、作出处理、通过stream输出新的状态</p>
+<p>构造方法如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">abstract class Bloc&lt;Event, State&gt; extends Stream&lt;State&gt; implements Sink&lt;Event&gt; &#123;</span><br><span class="line">  final PublishSubject&lt;Event&gt; _eventSubject = PublishSubject&lt;Event&gt;();</span><br><span class="line">  BehaviorSubject&lt;State&gt; _stateSubject;</span><br><span class="line">  ...</span><br><span class="line">  Bloc() &#123;</span><br><span class="line">    _stateSubject = BehaviorSubject&lt;State&gt;.seeded(initialState);  /// 初始化状态订阅器</span><br><span class="line">    _bindStateSubject();</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>_bindStateSubject方法实现事件流通道处理Event并转接到状态流的过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;State&gt; transformStates(Stream&lt;State&gt; states) =&gt; states;</span><br><span class="line"></span><br><span class="line">Stream&lt;State&gt; transformEvents(</span><br><span class="line">    Stream&lt;Event&gt; events,</span><br><span class="line">    Stream&lt;State&gt; Function(Event) next,</span><br><span class="line">  ) &#123;</span><br><span class="line">    return events.asyncExpand(next);  /// 将events流通道的元素一个个调用next方法并返回State的流</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line">void _bindStateSubject() &#123;</span><br><span class="line">    Event currentEvent;</span><br><span class="line"></span><br><span class="line">    transformStates(transformEvents(_eventSubject, (Event event) &#123;</span><br><span class="line">      currentEvent = event;</span><br><span class="line">      return mapEventToState(currentEvent).handleError(_handleError);</span><br><span class="line">    &#125;)).forEach(</span><br><span class="line">      (State nextState) &#123;</span><br><span class="line">        if (state == nextState || _stateSubject.isClosed) return;</span><br><span class="line">		...</span><br><span class="line">          _stateSubject.add(nextState);  /// 往State流通道加入新的状态元素并触发对应的观察者</span><br><span class="line">        ...</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>其余关键方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@override</span><br><span class="line"> StreamSubscription&lt;State&gt; listen(    /// 监听状态流</span><br><span class="line">   void Function(State) onData, &#123;</span><br><span class="line">   Function onError,</span><br><span class="line">   void Function() onDone,</span><br><span class="line">   bool cancelOnError,</span><br><span class="line"> &#125;) &#123;</span><br><span class="line">   return _stateSubject.listen(</span><br><span class="line">     onData,</span><br><span class="line">     onError: onError,</span><br><span class="line">     onDone: onDone,</span><br><span class="line">     cancelOnError: cancelOnError,</span><br><span class="line">   );</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> Future&lt;void&gt; close() async &#123;</span><br><span class="line">   await _eventSubject.close();</span><br><span class="line">   await _stateSubject.close();</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line">  @override</span><br><span class="line"> void add(Event event) &#123;</span><br><span class="line">   ...</span><br><span class="line">     _eventSubject.sink.add(event);   /// 往事件流里输入</span><br><span class="line">...</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="BlocBuilder"><a href="#BlocBuilder" class="headerlink" title="BlocBuilder"></a>BlocBuilder</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class BlocBuilder&lt;B extends Bloc&lt;dynamic, S&gt;, S&gt; extends BlocBuilderBase&lt;B, S&gt; &#123;</span><br><span class="line"></span><br><span class="line">  final BlocWidgetBuilder&lt;S&gt; builder;</span><br><span class="line"></span><br><span class="line">  const BlocBuilder(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required this.builder,</span><br><span class="line">    B bloc,</span><br><span class="line">    BlocBuilderCondition&lt;S&gt; condition,</span><br><span class="line">  &#125;)  : assert(builder != null),</span><br><span class="line">        super(key: key, bloc: bloc, condition: condition);</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context, S state) =&gt; builder(context, state);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">abstract class BlocBuilderBase&lt;B extends Bloc&lt;dynamic, S&gt;, S&gt;</span><br><span class="line">    extends StatefulWidget &#123;</span><br><span class="line">    </span><br><span class="line">	const BlocBuilderBase(&#123;Key key, this.bloc, this.condition&#125;) : super(key: key);</span><br><span class="line">	</span><br><span class="line">	Widget build(BuildContext context, S state);</span><br><span class="line">	</span><br><span class="line">    @override</span><br><span class="line">    State&lt;BlocBuilderBase&lt;B, S&gt;&gt; createState() =&gt; _BlocBuilderBaseState&lt;B, S&gt;();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class _BlocBuilderBaseState&lt;B extends Bloc&lt;dynamic, S&gt;, S&gt;</span><br><span class="line">    extends State&lt;BlocBuilderBase&lt;B, S&gt;&gt; &#123;</span><br><span class="line">  StreamSubscription&lt;S&gt; _subscription;</span><br><span class="line">  S _previousState;</span><br><span class="line">  S _state;</span><br><span class="line">  B _bloc;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void initState() &#123;</span><br><span class="line">    super.initState();</span><br><span class="line">    _bloc = widget.bloc ?? BlocProvider.of&lt;B&gt;(context);</span><br><span class="line">    _previousState = _bloc?.state;</span><br><span class="line">    _state = _bloc?.state;</span><br><span class="line">    /// 订阅</span><br><span class="line">    _subscribe();</span><br><span class="line">  &#125;</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) =&gt; widget.build(context, _state);</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void dispose() &#123;</span><br><span class="line">  	/// 取消订阅</span><br><span class="line">    _unsubscribe();</span><br><span class="line">    super.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void _subscribe() &#123;</span><br><span class="line">    if (_bloc != null) &#123;</span><br><span class="line">      _subscription = _bloc.skip(1).listen((S state) &#123;</span><br><span class="line">        if (widget.condition?.call(_previousState, state) ?? true) &#123;  /// 此处condition可作性能优化判断状态改变是否需要出发build</span><br><span class="line">          setState(() &#123;</span><br><span class="line">            _state = state;</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        _previousState = state;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  void _unsubscribe() &#123;</span><br><span class="line">    if (_subscription != null) &#123;</span><br><span class="line">      _subscription.cancel();</span><br><span class="line">      _subscription = null;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="BlocProvider"><a href="#BlocProvider" class="headerlink" title="BlocProvider"></a>BlocProvider</h4><p>BlocProvider实际是利用了Provider库的DI注入功能，并完成bloc生命周期的管理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">class BlocProvider&lt;T extends Bloc&lt;dynamic, dynamic&gt;&gt;</span><br><span class="line">    extends SingleChildStatelessWidget &#123;</span><br><span class="line"> 	...</span><br><span class="line">  BlocProvider(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required Create&lt;T&gt; create,</span><br><span class="line">    Widget child,</span><br><span class="line">    bool lazy,</span><br><span class="line">  &#125;) : this._(</span><br><span class="line">          key: key,</span><br><span class="line">          create: create,</span><br><span class="line">          dispose: (_, bloc) =&gt; bloc?.close(),</span><br><span class="line">          child: child,</span><br><span class="line">          lazy: lazy,</span><br><span class="line">        );</span><br><span class="line">        </span><br><span class="line">   BlocProvider.value(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required T value,</span><br><span class="line">    Widget child,</span><br><span class="line">  &#125;) : this._(</span><br><span class="line">          key: key,</span><br><span class="line">          create: (_) =&gt; value,</span><br><span class="line">          child: child,</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">  BlocProvider._(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required Create&lt;T&gt; create,</span><br><span class="line">    Dispose&lt;T&gt; dispose,</span><br><span class="line">    this.child,</span><br><span class="line">    this.lazy,</span><br><span class="line">  &#125;)  : _create = create,</span><br><span class="line">        _dispose = dispose,</span><br><span class="line">        super(key: key, child: child);</span><br><span class="line"></span><br><span class="line">  static T of&lt;T extends Bloc&lt;dynamic, dynamic&gt;&gt;(BuildContext context) &#123;</span><br><span class="line">	...</span><br><span class="line">      return Provider.of&lt;T&gt;(context, listen: false);</span><br><span class="line">  	...</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget buildWithChild(BuildContext context, Widget child) &#123;</span><br><span class="line">    return InheritedProvider&lt;T&gt;(   /// 使用Provider库完成DI注入</span><br><span class="line">      create: _create,</span><br><span class="line">      dispose: _dispose,</span><br><span class="line">      child: child,</span><br><span class="line">      lazy: lazy,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h3><p>bloc还提供一系列的辅助方法让我们更好地控制数据流</p>
+<ol>
+<li><p>Transition</p>
+<p>在bloc里的回调，在往状态流通道加入数据前调用，可以获取状态的改变情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">abstract class Bloc&lt;Event, State&gt; extends Stream&lt;State&gt; implements Sink&lt;Event&gt; &#123;</span><br><span class="line">	...</span><br><span class="line">	void onTransition(Transition&lt;Event, State&gt; transition) =&gt; null;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Transition&lt;Event, State&gt; &#123;</span><br><span class="line">  final State currentState;</span><br><span class="line">  final Event event;</span><br><span class="line">  final State nextState;</span><br><span class="line"></span><br><span class="line">  const Transition(&#123;</span><br><span class="line">    @required this.currentState,  /// 当前状态</span><br><span class="line">    @required this.event,			/// 触发此次状态转换的事件</span><br><span class="line">    @required this.nextState,		/// 将要改变成的状态</span><br><span class="line">  &#125;);</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>BlocDelegate</p>
+<p>bloc的全局代理对象，可继承它并覆写相应的回调方法，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class SimpleBlocDelegate extends BlocDelegate &#123;</span><br><span class="line">  @override</span><br><span class="line">  void onEvent(Bloc bloc, Object event) =&gt; null;  /// 事件监听</span><br><span class="line">  </span><br><span class="line">  @override</span><br><span class="line">  void onTransition(Bloc bloc, Transition transition) =&gt; null;	/// 状态改变</span><br><span class="line">  </span><br><span class="line">  @override</span><br><span class="line">  void onError(Bloc bloc, Object error, StackTrace stacktrace) =&gt; null; /// 错误捕捉</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后注册</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void main() &#123;</span><br><span class="line">  BlocSupervisor.delegate = SimpleBlocDelegate();  /// BlocSupervisor全局单例</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MultiBlocProvider</p>
+<p>用来将嵌套的BlocProvider给扁平化(使用了库 <a href="https://pub.dev/packages/nested" target="_blank" rel="noopener">nested</a> )，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BlocProvider&lt;BlocA&gt;(</span><br><span class="line">  create: (BuildContext context) =&gt; BlocA(),</span><br><span class="line">  child: BlocProvider&lt;BlocB&gt;(</span><br><span class="line">    create: (BuildContext context) =&gt; BlocB(),</span><br><span class="line">    child: BlocProvider&lt;BlocC&gt;(</span><br><span class="line">      create: (BuildContext context) =&gt; BlocC(),</span><br><span class="line">      child: ChildA(),</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>变为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">MultiBlocProvider(</span><br><span class="line">  providers: [</span><br><span class="line">    BlocProvider&lt;BlocA&gt;(</span><br><span class="line">      create: (BuildContext context) =&gt; BlocA(),</span><br><span class="line">    ),</span><br><span class="line">    BlocProvider&lt;BlocB&gt;(</span><br><span class="line">      create: (BuildContext context) =&gt; BlocB(),</span><br><span class="line">    ),</span><br><span class="line">    BlocProvider&lt;BlocC&gt;(</span><br><span class="line">      create: (BuildContext context) =&gt; BlocC(),</span><br><span class="line">    ),</span><br><span class="line">  ],</span><br><span class="line">  child: ChildA(),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>BlocListener</p>
+<p>实际是  BlocBuilder的另一种实现变化，应用缓存child的方式，每次setState只触发listener而不重新生成child，可用于拦截状态弹Toast，导航等等操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class BlocListener&lt;B extends Bloc&lt;dynamic, S&gt;, S&gt;</span><br><span class="line">    extends BlocListenerBase&lt;B, S&gt; &#123;</span><br><span class="line">  final Widget child;</span><br><span class="line"></span><br><span class="line">  const BlocListener(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    @required BlocWidgetListener&lt;S&gt; listener,	/// 作用同</span><br><span class="line">    B bloc,									/// 关注的bloc，不提供则会自动用泛型of往上找</span><br><span class="line">    BlocListenerCondition&lt;S&gt; condition,     /// 同BlocBuilder里的作用</span><br><span class="line">    this.child,			/// 应用缓存child的方式，每次build只触发listener而用同一个child</span><br><span class="line">  &#125;)  : super(</span><br><span class="line">          key: key,</span><br><span class="line">          child: child,</span><br><span class="line">          listener: listener,</span><br><span class="line">          bloc: bloc,</span><br><span class="line">          condition: condition,</span><br><span class="line">        );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>优点：</p>
+<ol>
+<li>事件通道处理事件转换状态，串联状态通道通知外部订阅对象</li>
+<li>可实现局部 按需刷新</li>
+<li>状态源各自Bloc管理，实现分治，同时也可以利用Delegate实现全局的事件管理</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>相较于redux，更集中在”分治”的焦点上，但是bloc组件之间缺少有效的通信机制</li>
+<li>缺少Middleware(AOP)模式的有效支持</li>
+<li>如果父组件发生更新，子组件绑定的数据源并未发生变化，仍会导致子的rebuild(可利用缓存child解决)</li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2022-04-01T15:57:33.014Z" itemprop="dateUpdated">2022-04-01 23:57:33</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2022/03/30/Flutter状态管理之路（三）/" target="_blank" rel="external">http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Weiye Lee">
+            Weiye Lee
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flutter/">flutter</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/&title=《Flutter状态管理之路（三）》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/&title=《Flutter状态管理之路（三）》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Flutter状态管理之路（三）》 — Weiye's Blog&url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2022/03/30/Flutter状态管理之路（二）/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Flutter状态管理之路（二）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Weiye Lee &copy; 2015 - 2022</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/&title=《Flutter状态管理之路（三）》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/&title=《Flutter状态管理之路（三）》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Flutter状态管理之路（三）》 — Weiye's Blog&url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（三）/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACwklEQVR42u3ay04jMRAF0Pz/T4M0q1kQ59bDIUinV1Gg3T5G6jLX9XjE19e/69nn/6/z7zwb+TzOeYSFCw8PD6819fwxz+7t4c/zSb55sQR4eHh413hJMcgnWl2O3jfnOePh4eF9Ai/ZLld/mizH+TMeHh7e3+IlhSQJHc7z+bXCgIeHh3fkJWFEvuE+/34e0eYxx0LWgoeHhxfz5gdg7//81vM9PDw8vLgkVA/DqhFwr/mgMFs8PDy8C7zJAf/k/dz7Pn/Ko7p+eHh4eEVeFZnEB3kxyNuwRptvPDw8vCXe/OWbTyv5Pl+m8n8MeHh4eEu8ZOp5kag2BPQOuprNDXh4eHirvBw22UznU6y2WL0oM3h4eHgXePnDcl6veEzi2mh8PDw8vFVevoGuvoHzxeqFI9EM8fDw8C7wqgf/zTg1KEJ5iUrGwcPDw9vlVSPXZOjqolTHKZQuPDw8vAu8efxajYCrsUJeSF78DfHw8PCWePkLutoEkNw7ab2KlhsPDw/vGq96AJYXhmpbQHJXvhHHw8PD+y3e1oFTXiryCPjF9h0PDw/vAm8rVsibD/KQN9+yF9qt8PDw8Ma8cotSUEJ6AUe+7W5OEQ8PD2+JV226mrQFVIPdG9t3PDw8vC3epCmqutWeRA95aXkkCQoeHh7emFeNGJJjqjxuyJcvfy4eHh7eDV7vYH4eduTL0WsmwMPDw3sPr/f4fO+aL0ESZESzwsPDw7vAq0a3u6/46uHZPKrAw8PDm/O+ilf+Wq+OU21KiLb+eHh4eBd4WxvfrUR5Eo6MGrPw8PDwirzdDXE1ROhtuJvRAx4eHt4qr7q1nTRUNXscivPHw8PD+wTeVjib31uNLZ6e8uHh4eF9DC8/xJrHr3kh+SGrxsPDw7vAqwas91oKotf9VgMBHh4e3mrrVS+YmNyVF498ofHw8PBWed+I7pKXVRY3mQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
