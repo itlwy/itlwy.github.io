@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Flutter状态管理之路（二） | Weiye&#39;s Blog | 好好学习,天天向上</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="flutter">
+    <meta name="description" content="接上一篇 Flutter状态管理之路（一），主要针对一些三方库来继续聊聊解决方案，介绍scope_model、provider、flutter_redux ScopedModel版本：1.0.1 这个库封装的比较简易，看例子就直接上关键源码吧 使用如下例子来自官方demo 1234567891011121314151617181920212223242526272829class CounterM">
+<meta name="keywords" content="flutter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter状态管理之路（二）">
+<meta property="og:url" content="http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/index.html">
+<meta property="og:site_name" content="Weiye&#39;s Blog">
+<meta property="og:description" content="接上一篇 Flutter状态管理之路（一），主要针对一些三方库来继续聊聊解决方案，介绍scope_model、provider、flutter_redux ScopedModel版本：1.0.1 这个库封装的比较简易，看例子就直接上关键源码吧 使用如下例子来自官方demo 1234567891011121314151617181920212223242526272829class CounterM">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13098410-d3b642122b60bcae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13098410-dcd6e2dfd7f65d38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/800">
+<meta property="og:updated_time" content="2022-04-01T15:53:41.966Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flutter状态管理之路（二）">
+<meta name="twitter:description" content="接上一篇 Flutter状态管理之路（一），主要针对一些三方库来继续聊聊解决方案，介绍scope_model、provider、flutter_redux ScopedModel版本：1.0.1 这个库封装的比较简易，看例子就直接上关键源码吧 使用如下例子来自官方demo 1234567891011121314151617181920212223242526272829class CounterM">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13098410-d3b642122b60bcae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="Weiye&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Weiye Lee</h5>
+          <a href="mailto:9011532@qq.com" title="9011532@qq.com" class="mail">9011532@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                Categories
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/itlwy" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/Weiye__Lee" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/889c25a46410" target="_blank" >
+                <i class="icon icon-lg icon-book"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Flutter状态管理之路（二）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Flutter状态管理之路（二）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2022-03-30T02:13:30.000Z" itemprop="datePublished" class="page-time">
+  2022-03-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ScopedModel"><span class="post-toc-number">1.</span> <span class="post-toc-text">ScopedModel</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">使用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关键对象"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">关键对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Model"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">Model</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ScopedModelDescendant"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">ScopedModelDescendant</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ScopedModel-1"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">ScopedModel</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Provider"><span class="post-toc-number">2.</span> <span class="post-toc-text">Provider</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-1"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">使用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#流程图"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">流程图</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#核心实现"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">核心实现</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结-1"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Redux"><span class="post-toc-number">3.</span> <span class="post-toc-text">Redux</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Stream"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">Stream</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#创建方式"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">创建方式</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#种类"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">种类</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#转换方法"><span class="post-toc-number">3.1.3.</span> <span class="post-toc-text">转换方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#三项原则"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">三项原则</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概念"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">概念</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用例子"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">使用例子</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#图示"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">图示</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#关键对象-1"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">关键对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Store"><span class="post-toc-number">3.6.1.</span> <span class="post-toc-text">Store</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Reducer"><span class="post-toc-number">3.6.2.</span> <span class="post-toc-text">Reducer</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#StoreProvider"><span class="post-toc-number">3.6.3.</span> <span class="post-toc-text">StoreProvider</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#StoreConnector"><span class="post-toc-number">3.6.4.</span> <span class="post-toc-text">StoreConnector</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#工具方法"><span class="post-toc-number">3.7.</span> <span class="post-toc-text">工具方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结-2"><span class="post-toc-number">3.8.</span> <span class="post-toc-text">总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优点"><span class="post-toc-number">3.8.1.</span> <span class="post-toc-text">优点</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#缺点"><span class="post-toc-number">3.8.2.</span> <span class="post-toc-text">缺点</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#辅助库"><span class="post-toc-number">3.9.</span> <span class="post-toc-text">辅助库</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参考"><span class="post-toc-number">3.10.</span> <span class="post-toc-text">参考</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Flutter状态管理之路（二）"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Flutter状态管理之路（二）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2022-03-30 10:13:30" datetime="2022-03-30T02:13:30.000Z"  itemprop="datePublished">2022-03-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Flutter/">Flutter</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>接上一篇 <a href="https://www.jianshu.com/p/10a1a16dfff7" target="_blank" rel="noopener">Flutter状态管理之路（一）</a>，主要针对一些三方库来继续聊聊解决方案，介绍scope_model、provider、flutter_redux</p>
+<h2 id="ScopedModel"><a href="#ScopedModel" class="headerlink" title="ScopedModel"></a>ScopedModel</h2><p>版本：1.0.1</p>
+<p>这个库封装的比较简易，看例子就直接上关键源码吧</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>如下例子来自官方demo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class CounterModel extends Model &#123;</span><br><span class="line">  int _counter = 0;</span><br><span class="line"></span><br><span class="line">  int get counter =&gt; _counter;</span><br><span class="line"></span><br><span class="line">  void increment() &#123;</span><br><span class="line">    // First, increment the counter</span><br><span class="line">    _counter++;</span><br><span class="line">    </span><br><span class="line">    // Then notify all the listeners.</span><br><span class="line">    notifyListeners();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//在入口处也需要将根组件抱在ScopedModel中，这样就可以正常工作了。</span><br><span class="line">class CounterApp extends StatelessWidget &#123;</span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return new ScopedModel&lt;CounterModel&gt;(</span><br><span class="line">      model: new CounterModel(),</span><br><span class="line">      child: new Column(children: [</span><br><span class="line">        new ScopedModelDescendant&lt;CounterModel&gt;(</span><br><span class="line">          builder: (context, child, model) =&gt; new Text(&apos;$&#123;model.counter&#125;&apos;),</span><br><span class="line">        ),</span><br><span class="line">        new Text(&quot;Another widget that doesn&apos;t depend on the CounterModel&quot;)</span><br><span class="line">      ])</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关键对象"><a href="#关键对象" class="headerlink" title="关键对象"></a>关键对象</h3><h4 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">abstract class Model extends Listenable &#123;</span><br><span class="line">  final Set&lt;VoidCallback&gt; _listeners = Set&lt;VoidCallback&gt;();  /// 注册观察者函数句柄</span><br><span class="line">  int _version = 0;</span><br><span class="line">  int _microtaskVersion = 0;</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void addListener(VoidCallback listener) &#123; /// 添加观察者</span><br><span class="line">    _listeners.add(listener);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  void removeListener(VoidCallback listener) &#123;  /// 去除观察者</span><br><span class="line">    _listeners.remove(listener);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  int get listenerCount =&gt; _listeners.length;</span><br><span class="line"></span><br><span class="line">  @protected</span><br><span class="line">  void notifyListeners() &#123; /// 遍历通知观察者</span><br><span class="line">    if (_microtaskVersion == _version) &#123;</span><br><span class="line">      _microtaskVersion++;</span><br><span class="line">      scheduleMicrotask(() &#123;</span><br><span class="line">        _version++;</span><br><span class="line">        _microtaskVersion = _version;</span><br><span class="line"></span><br><span class="line">        _listeners.toList().forEach((VoidCallback listener) =&gt; listener());</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上，其实就是观察者模式，在子类的setter方法里调用下notify通知订阅的Widget</p>
+<h4 id="ScopedModelDescendant"><a href="#ScopedModelDescendant" class="headerlink" title="ScopedModelDescendant"></a>ScopedModelDescendant</h4><p>用来向上搜索从ScopedModel（继承InheritedWidget）中获取状态，由于InheritedWidget</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">class ScopedModelDescendant&lt;T extends Model&gt; extends StatelessWidget &#123;</span><br><span class="line">  final ScopedModelDescendantBuilder&lt;T&gt; builder;</span><br><span class="line"></span><br><span class="line">  final Widget child;</span><br><span class="line"></span><br><span class="line">  final bool rebuildOnChange;</span><br><span class="line"></span><br><span class="line">  ScopedModelDescendant(&#123;</span><br><span class="line">    @required this.builder,</span><br><span class="line">    this.child,</span><br><span class="line">    this.rebuildOnChange = true,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return builder(</span><br><span class="line">      context,</span><br><span class="line">      child,  /// 缓存child机制</span><br><span class="line">      ScopedModel.of&lt;T&gt;(context, rebuildOnChange: rebuildOnChange),  /// 向上获取InheritedWidget来获取状态</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="ScopedModel-1"><a href="#ScopedModel-1" class="headerlink" title="ScopedModel"></a>ScopedModel</h3><p>主要利用AnimatedBuilder和Listenable配合实现通知订阅，里面还使用了自定义的InheritedWidget(即_InheritedModel)来存储Model，向下暴露</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class ScopedModel&lt;T extends Model&gt; extends StatelessWidget &#123;</span><br><span class="line">  final T model;</span><br><span class="line"></span><br><span class="line">  final Widget child;</span><br><span class="line"></span><br><span class="line">  ScopedModel(&#123;@required this.model, @required this.child&#125;)</span><br><span class="line">      : assert(model != null),</span><br><span class="line">        assert(child != null);</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return AnimatedBuilder(</span><br><span class="line">      animation: model,</span><br><span class="line">      builder: (context, _) =&gt; _InheritedModel&lt;T&gt;(model: model, child: child),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>优点：</p>
+<ol>
+<li>自动订阅</li>
+<li>可跨组件传递状态</li>
+<li>简单易用，对前端开发者来说学习成本几乎为零</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>无法分离视图逻辑和业务逻辑</li>
+<li><code>ScopedModel</code>其实只是将InheritedWidget简单的封装了一下，局限性较大</li>
+</ol>
+<h2 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h2><p>版本：4.0.1</p>
+<p>一个DI依赖注入和状态管理的框架</p>
+<h3 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h3><p>来自官方计数器Demo</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> main() =&gt; runApp(MyApp());</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 1.定义状态Model</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Counter</span> <span class="title">with</span> <span class="title">ChangeNotifier</span> </span>&#123;</span><br><span class="line">  <span class="built_in">int</span> _count = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">int</span> <span class="keyword">get</span> count =&gt; _count;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> increment() &#123;</span><br><span class="line">    _count++;</span><br><span class="line">    notifyListeners();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> MultiProvider(</span><br><span class="line">      providers: [</span><br><span class="line">        ChangeNotifierProvider(create: (_) =&gt; Counter()), <span class="comment">/// 2. 在树根注入状态</span></span><br><span class="line">      ],</span><br><span class="line">      child: MaterialApp(</span><br><span class="line">            home: Consumer&lt;Counter&gt;(		<span class="comment">/// 3. 利用Consumer组件自动获取counter</span></span><br><span class="line">            builder: (context, counter, _) &#123;</span><br><span class="line">              <span class="keyword">return</span> MaterialApp(</span><br><span class="line">                home: <span class="keyword">const</span> MyHomePage(),</span><br><span class="line">              );</span><br><span class="line">            &#125;,</span><br><span class="line">          ),</span><br><span class="line">          )</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHomePage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> MyHomePage(&#123;Key key&#125;) : <span class="keyword">super</span>(key: key);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(title: Text(<span class="string">""</span>)),</span><br><span class="line">      body: <span class="keyword">const</span> Center(child: CounterLabel()),</span><br><span class="line">      floatingActionButton: <span class="keyword">const</span> IncrementCounterButton(),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IncrementCounterButton</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> IncrementCounterButton(&#123;Key key&#125;) : <span class="keyword">super</span>(key: key);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> FloatingActionButton(</span><br><span class="line">      onPressed: () &#123;</span><br><span class="line">        Provider.of&lt;Counter&gt;(context, listen: <span class="keyword">false</span>).increment();  <span class="comment">/// 4. 获取使用(不加入监听)</span></span><br><span class="line">      &#125;,</span><br><span class="line">      tooltip: <span class="string">'Increment'</span>,</span><br><span class="line">      child: <span class="keyword">const</span> Icon(Icons.add),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CounterLabel</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> CounterLabel(&#123;Key key&#125;) : <span class="keyword">super</span>(key: key);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">final</span> counter = Provider.of&lt;Counter&gt;(context);	<span class="comment">/// 5. 获取使用(加入监听)</span></span><br><span class="line">    <span class="keyword">return</span> Column(</span><br><span class="line">      mainAxisSize: MainAxisSize.min,</span><br><span class="line">      mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">      children: &lt;Widget&gt;[</span><br><span class="line">        <span class="keyword">const</span> Text(</span><br><span class="line">          <span class="string">'You have pushed the button this many times:'</span>,</span><br><span class="line">        ),</span><br><span class="line">        Text(</span><br><span class="line">          <span class="string">'<span class="subst">$&#123;counter.count&#125;</span>'</span>,</span><br><span class="line">        ),</span><br><span class="line">      ],</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/13098410-d3b642122b60bcae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="provider流程.png" title>
+                </div>
+                <div class="image-caption">provider流程.png</div>
+            </figure>
+<h3 id="核心实现"><a href="#核心实现" class="headerlink" title="核心实现"></a>核心实现</h3><p>关于Provider的源码实现，这里推荐阅读 <a href="https://book.flutterchina.club/chapter7/provider.html" target="_blank" rel="noopener">跨组件状态共享（Provider）</a>，文章将主要的内容都剥离出来带着实现了一遍</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>优点：</p>
+<ol>
+<li><p>利用child缓存机制优化了InheritedWidget的全量build缺点</p>
+</li>
+<li><p>我们的业务代码更关注数据了，只要更新Model，则UI会自动更新，而不用在状态改变后再去手动调用<code>setState()</code>来显式更新页面。</p>
+</li>
+<li>数据改变的消息传递被屏蔽了，我们无需手动去处理状态改变事件的发布和订阅了，这一切都被封装在Provider中了；不用像eventbus一样自己去定义事件和注册、解注册等</li>
+<li>在大型复杂应用中，尤其是需要全局共享的状态非常多时，使用Provider将会大大简化我们的代码逻辑，降低出错的概率，提高开发效率。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>没有有效解决逻辑和视图解耦的问题</li>
+<li>对于状态的集中和分治管理没有提供有效的方式</li>
+</ol>
+<h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><p>版本：flutter_redux 0.6.0、redux 4.0.0</p>
+<p>库：<a href="https://pub.dev/packages/flutter_redux" target="_blank" rel="noopener">flutter_redux</a></p>
+<p>Redux 是一个用来做可预测、易调试的数据管理的框架。 所有对数据的增删改查等操作都由 Redux 来集中负责。</p>
+<p>在了解Redux前，先介绍下Stream</p>
+<h3 id="Stream"><a href="#Stream" class="headerlink" title="Stream"></a>Stream</h3><h4 id="创建方式"><a href="#创建方式" class="headerlink" title="创建方式"></a>创建方式</h4><ol>
+<li><p>通过构造函数</p>
+<p><strong>Stream.fromFuture</strong>:从Future创建新的单订阅流,当future完成时将触发一个data或者error，然后使用Down事件关闭这个流。</p>
+<p><strong>Stream.fromFutures</strong>:从一组Future创建一个单订阅流，每个future都有自己的data或者error事件，当整个Futures完成后，流将会关闭。如果Futures为空，流将会立刻关闭。</p>
+<p><strong>Stream.fromIterable</strong>:创建从一个集合中获取其数据的单订阅流</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Stream.fromIntreable([1,2,3]);</span><br></pre></td></tr></table></figure>
+<p>监听一个流最常见的方法就是listen。当有事件发出时，流将会通知listener。Listen方法提供了这几种触发事件：</p>
+<ul>
+<li>onData(必填)：收到数据时触发</li>
+<li>onError：收到Error时触发</li>
+<li>onDone：结束时触发</li>
+<li>unsubscribeOnError：遇到第一个Error时是否取消订阅，默认为false</li>
+</ul>
+</li>
+<li><p>使用StreamController</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//任意类型的流</span><br><span class="line">StreamController controller = StreamController();</span><br><span class="line">controller.sink.add(123);</span><br><span class="line">controller.sink.add(&quot;xyz&quot;);</span><br><span class="line">controller.sink.add(Anything);</span><br><span class="line"></span><br><span class="line">//创建一条处理int类型的流</span><br><span class="line">StreamController&lt;int&gt; numController = StreamController();</span><br><span class="line">numController.sink.add(123);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="种类"><a href="#种类" class="headerlink" title="种类"></a>种类</h4><ol>
+<li><p>“Single-subscription” streams 单订阅流</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">StreamController controller = StreamController();</span><br><span class="line"></span><br><span class="line">controller.stream.listen((data)=&gt; print(data));</span><br><span class="line">controller.stream.listen((data)=&gt; print(data));</span><br><span class="line"></span><br><span class="line">controller.sink.add(123);</span><br></pre></td></tr></table></figure>
+<p><strong>输出：</strong> Bad state: Stream has already been listened to. <strong>单订阅流不能有多个收听者</strong></p>
+<p>只能有一个监听，并且取消后也不能加入新的；流的发送是在增加监听之后才触发的，所以不会错过事件，如io流</p>
+</li>
+<li><p>“broadcast” streams 多订阅流</p>
+<p>可以增加多个监听，监听器只能监听到添加之后发出的事件，正在和之前发出的均不会收到</p>
+<p>从Stream继承的广播流必须重写isBroadcast 才能返回true</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">StreamController controller = StreamController();</span><br><span class="line">//将单订阅流转化为广播流</span><br><span class="line">Stream stream = controller.stream.asBroadcastStream();</span><br><span class="line"></span><br><span class="line">stream.listen((data)=&gt; print(data));</span><br><span class="line">stream.listen((data)=&gt; print(data));</span><br><span class="line"></span><br><span class="line">controller.sink.add(123);</span><br><span class="line">/// 输出： 123 123</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="转换方法"><a href="#转换方法" class="headerlink" title="转换方法"></a>转换方法</h4><ol>
+<li><p>流提供了众多操作符map()，where()，expand()，和take()方法，能够轻松将已有的流转化为新的流</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">stream.where((event)&#123;...&#125;)</span><br><span class="line"></span><br><span class="line">StreamController&lt;int&gt; controller = StreamController&lt;int&gt;();</span><br><span class="line"></span><br><span class="line">final transformer = StreamTransformer&lt;int,String&gt;.fromHandlers(</span><br><span class="line">    handleData:(value, sink)&#123;</span><br><span class="line">  	if(value==100)&#123;</span><br><span class="line">      sink.add(&quot;你猜对了&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">	else&#123; sink.addError(&apos;还没猜中，再试一次吧&apos;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  controller.stream</span><br><span class="line">            .transform(transformer)</span><br><span class="line">            .listen(</span><br><span class="line">                (data) =&gt; print(data),</span><br><span class="line">                onError:(err) =&gt; print(err));</span><br><span class="line">    </span><br><span class="line">    controller.sink.add(23);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="三项原则"><a href="#三项原则" class="headerlink" title="三项原则"></a><a href="https://github.com/johnpryan/redux.dart/blob/master/doc/why.md" target="_blank" rel="noopener">三项原则</a></h3><ol>
+<li><p>可信任的单一数据源</p>
+<p>整个应用的状态应该都被存储在一颗状态对象树中(store)</p>
+</li>
+<li><p>状态只读</p>
+<p>每个状态对象都是普通dart对象，并且是Imutation；状态对外只读，要改变state只能通过发出action经由相应的reducer里修改</p>
+</li>
+<li><p>状态只由纯函数更改</p>
+<p>这里的纯函数指的是reducer，接收前一个状态值和action，这里根据上述2个变量生成新的状态值</p>
+</li>
+</ol>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>说明</th>
+<th>所属库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Store</td>
+<td>状态的载体(仓库)，持有Reducer、State、Middleware</td>
+<td>redux包</td>
+</tr>
+<tr>
+<td>Reducer</td>
+<td>对State进行改变操作的地方，其他地方不能改变，因为State<br>都是Imutaion的</td>
+<td>redux包</td>
+</tr>
+<tr>
+<td>Action</td>
+<td>行为的抽象，标识一种对State改变的行为</td>
+<td>redux包</td>
+</tr>
+<tr>
+<td>State</td>
+<td>影响View树的状态值</td>
+<td>redux包</td>
+</tr>
+<tr>
+<td>StoreProvider</td>
+<td>继承自InheritedWidget，主要用于Store的DI注入</td>
+<td>Flutter_redux包</td>
+</tr>
+<tr>
+<td>StoreConnector</td>
+<td>关联Store，利用Stream和StreamBuilder实现局部刷新，可利用Stream丰富的API进行功能的添加</td>
+<td>Flutter_redux包</td>
+</tr>
+<tr>
+<td>Middleware</td>
+<td>中间件，用于在reducer执行前拦截进行一些操作，<br>调用next则执行下一个中间件直到Reducer</td>
+<td>redux包</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使用例子"><a href="#使用例子" class="headerlink" title="使用例子"></a>使用例子</h3><p>官方Demo: <a href="https://github.com/brianegan/flutter_redux/tree/master/example/counter" target="_blank" rel="noopener">Counter</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">enum Actions &#123; Increment &#125;  /// 1. 定义Action</span><br><span class="line"></span><br><span class="line">int counterReducer(int state, dynamic action) &#123;</span><br><span class="line">  if (action == Actions.Increment) &#123;  /// 2. 创建Reducer</span><br><span class="line">    return state + 1;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return state;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void main() &#123;</span><br><span class="line">  final store = Store&lt;int&gt;(counterReducer, initialState: 0);   /// 3. 初始化store</span><br><span class="line"></span><br><span class="line">  runApp(FlutterReduxApp(</span><br><span class="line">    title: &apos;Flutter Redux Demo&apos;,</span><br><span class="line">    store: store,</span><br><span class="line">  ));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class FlutterReduxApp extends StatelessWidget &#123;</span><br><span class="line">  final Store&lt;int&gt; store;</span><br><span class="line">  final String title;</span><br><span class="line"></span><br><span class="line">  FlutterReduxApp(&#123;Key key, this.store, this.title&#125;) : super(key: key);</span><br><span class="line"></span><br><span class="line">  @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return StoreProvider&lt;int&gt;(    /// 4. 在根Widget注入store</span><br><span class="line">      store: store,</span><br><span class="line">      child: MaterialApp(</span><br><span class="line">        title: title,</span><br><span class="line">        home: Scaffold(</span><br><span class="line">          appBar: AppBar(</span><br><span class="line">            title: Text(title),</span><br><span class="line">          ),</span><br><span class="line">          body: Center(</span><br><span class="line">            child: Column(</span><br><span class="line">              mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">              children: [</span><br><span class="line">                Text(</span><br><span class="line">                  &apos;You have pushed the button this many times:&apos;,</span><br><span class="line">                ),</span><br><span class="line">               </span><br><span class="line">                StoreConnector&lt;int, String&gt;(      /// 5. 连接Store和子树</span><br><span class="line">                  converter: (store) =&gt; store.state.toString(),   /// 6. 从store中 取出转换成需要的state</span><br><span class="line">                  builder: (context, count) &#123;                     /// 7. 构建子widget树</span><br><span class="line">                    return Text(</span><br><span class="line">                      count,</span><br><span class="line">                      style: Theme.of(context).textTheme.display1,</span><br><span class="line">                    );</span><br><span class="line">                  &#125;,</span><br><span class="line">                )</span><br><span class="line">              ],</span><br><span class="line">            ),</span><br><span class="line">          ),</span><br><span class="line">         </span><br><span class="line">          floatingActionButton: StoreConnector&lt;int, VoidCallback&gt;(</span><br><span class="line">            converter: (store) &#123;</span><br><span class="line">              return () =&gt; store.dispatch(Actions.Increment);   /// 8. 获取dispatch</span><br><span class="line">            &#125;,</span><br><span class="line">            builder: (context, callback) &#123;</span><br><span class="line">              return FloatingActionButton(</span><br><span class="line">                onPressed: callback,                         /// 9. 发送&quot;加数&quot;的Action</span><br><span class="line">                tooltip: &apos;asdasdasd&apos;,</span><br><span class="line">                child: Icon(Icons.add),</span><br><span class="line">              );</span><br><span class="line">            &#125;,</span><br><span class="line">          ),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="图示"><a href="#图示" class="headerlink" title="图示"></a>图示</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/13098410-dcd6e2dfd7f65d38.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/800" alt="redux图示1.png" title>
+                </div>
+                <div class="image-caption">redux图示1.png</div>
+            </figure>
+<h3 id="关键对象-1"><a href="#关键对象-1" class="headerlink" title="关键对象"></a>关键对象</h3><h4 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h4><p>主要实现 </p>
+<ol>
+<li>中间件及状态改变(reducer)功能</li>
+<li>利用streamBroadcast 实现订阅功能</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class Store&lt;State&gt; &#123;</span><br><span class="line">  Reducer&lt;State&gt; reducer;</span><br><span class="line"></span><br><span class="line">  final StreamController&lt;State&gt; _changeController;</span><br><span class="line">  State _state;</span><br><span class="line">  List&lt;NextDispatcher&gt; _dispatchers;</span><br><span class="line"></span><br><span class="line">  Store(</span><br><span class="line">    this.reducer, &#123;</span><br><span class="line">    State initialState,</span><br><span class="line">    List&lt;Middleware&lt;State&gt;&gt; middleware = const [],</span><br><span class="line">    bool syncStream = false,</span><br><span class="line">    bool distinct = false,</span><br><span class="line">  &#125;) : _changeController = StreamController.broadcast(sync: syncStream) &#123;</span><br><span class="line">    _state = initialState;</span><br><span class="line">    _dispatchers = _createDispatchers(  /// 创建链式中间件和Reducer的链式结构</span><br><span class="line">      middleware,</span><br><span class="line">      _createReduceAndNotify(distinct),		/// 用NextDispatcher包装reducer</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// NextDispatcher定义如下：</span><br><span class="line">typedef dynamic NextDispatcher(dynamic action);</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p><strong>创建链式结构</strong></p>
+<p>将Reducer包装成NextDispatcher，实际利用了闭包来访问reducer</p>
+<pre><code>NextDispatcher _createReduceAndNotify(bool distinct) {
+    return (dynamic action) {
+      final state = reducer(_state, action);
+
+      if (distinct &amp;&amp; state == _state) return;
+
+      _state = state;
+      _changeController.add(state);  /// 往stream添加事件，会触发流的监听
+    };
+  }
+</code></pre><p>闭包将reducer和middleware处理后生成一个链式的NextDispatcher结构</p>
+<pre><code>List&lt;NextDispatcher&gt; _createDispatchers(
+    List&lt;Middleware&lt;State&gt;&gt; middleware,
+    NextDispatcher reduceAndNotify,
+  ) {
+    final dispatchers = &lt;NextDispatcher&gt;[]..add(reduceAndNotify);
+
+    // Convert each [Middleware] into a [NextDispatcher]
+    for (var nextMiddleware in middleware.reversed) {
+      final next = dispatchers.last;    /// 每次取NextDispatcher集合末尾的元素
+
+      dispatchers.add(
+        (dynamic action) =&gt; nextMiddleware(this, action, next),  /// 往集合尾部追加中间件的封装函数(NextDispatcher)
+      );
+    }
+
+    return dispatchers.reversed.toList();        /// 最后将集合逆序，即先按顺序执行中间件，最后执行Reducer
+  }
+</code></pre></li>
+<li><p>Store里有一个dispatch方法，用于发出改变状态的行为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dynamic dispatch(dynamic action) &#123;</span><br><span class="line">    return _dispatchers[0](action);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>如上，dispatch时，实际上就是从链头开始走NextDispatcher方法，中间经过middleware和reducer的处理</p>
+</li>
+</ol>
+<h4 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h4><p>接收当前状态值和Action，处理后返回一个新的State用于替换当前State</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef State Reducer&lt;State&gt;(State state, dynamic action);</span><br></pre></td></tr></table></figure>
+<h4 id="StoreProvider"><a href="#StoreProvider" class="headerlink" title="StoreProvider"></a>StoreProvider</h4><p>主要实现：</p>
+<ol>
+<li>Store的DI注入</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class StoreProvider&lt;S&gt; extends InheritedWidget &#123;</span><br><span class="line">  final Store&lt;S&gt; _store;</span><br><span class="line">  ...</span><br><span class="line">  static Store&lt;S&gt; of&lt;S&gt;(BuildContext context, &#123;bool listen = true&#125;) &#123;</span><br><span class="line">    final type = _typeOf&lt;StoreProvider&lt;S&gt;&gt;();</span><br><span class="line">    final provider = (listen</span><br><span class="line">        ? context.inheritFromWidgetOfExactType(type)  /// 从树结构获取Widget并且将context加入监听集合</span><br><span class="line">        : context</span><br><span class="line">            .ancestorInheritedElementForWidgetOfExactType(type)	/// 只获取 不加入监听</span><br><span class="line">            ?.widget) as StoreProvider&lt;S&gt;;</span><br><span class="line"></span><br><span class="line">    if (provider == null) throw StoreProviderError(type);</span><br><span class="line"></span><br><span class="line">    return provider._store;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="StoreConnector"><a href="#StoreConnector" class="headerlink" title="StoreConnector"></a>StoreConnector</h4><p>主要实现：</p>
+<ol>
+<li>从父层级获取Store</li>
+<li>利用Stream和StreamBuilder实现局部刷新，可利用Stream丰富的API进行功能的添加</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class StoreConnector&lt;S, ViewModel&gt; extends StatelessWidget &#123;</span><br><span class="line">...</span><br><span class="line">@override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    return _StoreStreamListener&lt;S, ViewModel&gt;(</span><br><span class="line">      store: StoreProvider.of&lt;S&gt;(context),   /// 沿树往上搜索Store</span><br><span class="line">      builder: builder,						/// 利用ViewModel构建Widget</span><br><span class="line">      converter: converter,					/// 将获取的State转为ViewModel</span><br><span class="line">      distinct: distinct,					/// 性能优化开关，决定当ViewModel改变时是否利用==去比较以决定是否rebuild</span><br><span class="line">      onInit: onInit,</span><br><span class="line">      onDispose: onDispose,</span><br><span class="line">      rebuildOnChange: rebuildOnChange,</span><br><span class="line">      ignoreChange: ignoreChange,</span><br><span class="line">      onWillChange: onWillChange,</span><br><span class="line">      onDidChange: onDidChange,</span><br><span class="line">      onInitialBuild: onInitialBuild,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">...  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">class _StoreStreamListener&lt;S, ViewModel&gt; extends StatefulWidget &#123;</span><br><span class="line">...</span><br><span class="line"> @override</span><br><span class="line">  State&lt;StatefulWidget&gt; createState() &#123;</span><br><span class="line">    return _StoreStreamListenerState&lt;S, ViewModel&gt;();</span><br><span class="line">  &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class _StoreStreamListenerState&lt;S, ViewModel&gt;</span><br><span class="line">    extends State&lt;_StoreStreamListener&lt;S, ViewModel&gt;&gt; &#123;</span><br><span class="line">	...</span><br><span class="line">    @override</span><br><span class="line">  void initState() &#123;</span><br><span class="line">	...</span><br><span class="line">    latestValue = widget.converter(widget.store);  /// 将state转换成ViewModel</span><br><span class="line">    _createStream();	/// 创建监听流</span><br><span class="line">	...</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">   void _createStream() &#123;</span><br><span class="line">    stream = widget.store.onChange  /// 取出Store的流</span><br><span class="line">        .where(_ignoreChange)</span><br><span class="line">        .map(_mapConverter)			/// 这里执行传进来的convert方法进行转换</span><br><span class="line">        .where(_whereDistinct)		/// 性能优化，与distinct相关,</span><br><span class="line">        .transform(StreamTransformer.fromHandlers(handleData: _handleChange)); ///生成ViewModel的流</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  /// 这里实际就是将State转为ViewModel流的地方</span><br><span class="line">   void _handleChange(ViewModel vm, EventSink&lt;ViewModel&gt; sink) &#123;</span><br><span class="line">    if (widget.onWillChange != null) &#123;</span><br><span class="line">      widget.onWillChange(latestValue, vm);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    latestValue = vm;</span><br><span class="line"></span><br><span class="line">    if (widget.onDidChange != null) &#123;</span><br><span class="line">      WidgetsBinding.instance.addPostFrameCallback((_) &#123;</span><br><span class="line">        widget.onDidChange(latestValue);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sink.add(vm);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">   @override</span><br><span class="line">  void didUpdateWidget(_StoreStreamListener&lt;S, ViewModel&gt; oldWidget) &#123;</span><br><span class="line">  /// InheritedWidget 的依赖情况改变时会调用，判断是否需要重新关联新的流</span><br><span class="line">    latestValue = widget.converter(widget.store);</span><br><span class="line"></span><br><span class="line">    if (widget.store != oldWidget.store) &#123;</span><br><span class="line">      _createStream();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    super.didUpdateWidget(oldWidget);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">   @override</span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">  /// 使用官方StreamBuilder组件来监听转换后ViewModel流</span><br><span class="line">    return widget.rebuildOnChange</span><br><span class="line">        ? StreamBuilder&lt;ViewModel&gt;(</span><br><span class="line">            stream: stream,</span><br><span class="line">            builder: (context, snapshot) =&gt; widget.builder(</span><br><span class="line">              context,</span><br><span class="line">              latestValue,</span><br><span class="line">            ),</span><br><span class="line">          )</span><br><span class="line">        : widget.builder(context, latestValue);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ol>
+<li>上述Build方法里的rebuildOnChange：true 则会启用流监听，否则只是普通的widget构建，更新只在InheritedWidget依赖改变或者上层build时才触发rebuild</li>
+<li>因为整个State是一个stream出来的，每次store的state改变均会发出事件，widget.distinct，这个开启后，便可实现某个单独的Connector只有在依赖的ViewModel改变时才会重新build</li>
+</ol>
+<p>实际上利用InherityWidget实现Store的DI注入，</p>
+<h3 id="工具方法"><a href="#工具方法" class="headerlink" title="工具方法"></a>工具方法</h3><p>在redux包里有一个工具方法集合 位于：src/utils.dart</p>
+<ol>
+<li>combineReducers，用来合并Reducer</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/// 利用闭包 包装多个Reducer为一个Reducer</span><br><span class="line">Reducer&lt;State&gt; combineReducers&lt;State&gt;(Iterable&lt;Reducer&lt;State&gt;&gt; reducers) &#123;</span><br><span class="line">  return (State state, dynamic action) &#123;</span><br><span class="line">    for (final reducer in reducers) &#123;</span><br><span class="line">      state = reducer(state, action);</span><br><span class="line">    &#125;</span><br><span class="line">    return state;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>TypedMiddleware&lt;State, Action&gt; ，用来根据action过滤执行指定的中间件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">final todosReducer = combineReducers&lt;List&lt;Todo&gt;&gt;([</span><br><span class="line">  TypedReducer&lt;List&lt;Todo&gt;, AddTodoAction&gt;(_addTodo),</span><br><span class="line">  TypedReducer&lt;List&lt;Todo&gt;, DeleteTodoAction&gt;(_deleteTodo),</span><br><span class="line">  ...</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>TypedReducer&lt;State, Action&gt; ，用来根据action过滤执行指定的reducer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    TypedMiddleware&lt;AppState, LoadTodosAction&gt;(loadTodos),</span><br><span class="line">    TypedMiddleware&lt;AppState, AddTodoAction&gt;(saveTodos),</span><br><span class="line">    ...</span><br><span class="line">  ];</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>一颗状态树对应用状态进去集权统一管理，方便对状态改变log、序列化、持久化、测试、撤销重做、时光轴回放</li>
+<li>状态均为immutation，每次的改变均生成一个新的，防止副作用产生</li>
+<li>状态的改变不管从view还是网络 均必须通过发出action，在reducer里修改，保证了无竞争问题</li>
+<li>追踪问题方便，可打印某一时刻的状态树，直观分析出异常状态节点</li>
+<li>支持面向切面AOP编程的中间件，中间件定义是可插拔，可叠加，但不会改变事件流程</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>Redux 的集中和 Component 的分治之间的矛盾</li>
+<li>Redux 的 Reducer 需要一层层手动组装，带来的繁琐性和易错性</li>
+<li>代码结构侵入性较大</li>
+<li>如果父组件发生更新，子组件绑定的数据源并未发生变化，仍会导致子的rebuild(可利用缓存child解决)</li>
+</ol>
+<h3 id="辅助库"><a href="#辅助库" class="headerlink" title="辅助库"></a>辅助库</h3><ol>
+<li><p><a href="https://pub.dev/packages/redux_thunk#-example-tab-" target="_blank" rel="noopener">redux_thunk</a></p>
+<p>通过定义中间件拦截 指定的 Function，以实现异步操作然后dispatch改变state的action去刷新</p>
+</li>
+<li><p><a href="https://pub.dev/packages/flutter_redux_dev_tools" target="_blank" rel="noopener">flutter_redux_dev_tools</a> : Time Travel UI，可和React.js一样实现时间旅行</p>
+</li>
+</ol>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li><a href="https://github.com/brianegan/flutter_architecture_samples/tree/master/redux" target="_blank" rel="noopener">Todo app</a></li>
+</ol>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2022-04-01T15:53:41.966Z" itemprop="dateUpdated">2022-04-01 23:53:41</time>
+</span><br>
+
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2022/03/30/Flutter状态管理之路（二）/" target="_blank" rel="external">http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="Weiye Lee">
+            Weiye Lee
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/flutter/">flutter</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/&title=《Flutter状态管理之路（二）》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/&title=《Flutter状态管理之路（二）》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Flutter状态管理之路（二）》 — Weiye's Blog&url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2022/03/28/Flutter状态管理之路（一）/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Flutter状态管理之路（一）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Weiye Lee &copy; 2015 - 2022</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/&title=《Flutter状态管理之路（二）》 — Weiye's Blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/&title=《Flutter状态管理之路（二）》 — Weiye's Blog&source=好好学习,天天向上" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Flutter状态管理之路（二）》 — Weiye's Blog&url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2022/03/30/Flutter状态管理之路（二）/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACs0lEQVR42u3aQXLbQAwEQP3/0/Y1VbakGWDX0aF5SsUscpsHAALweMTX1z/Xs7/+vHN2vX7m48aFh4eHtzj665e1/5/fk58tPzMeHh7ebV4S7p+F6Z9PSI6SY16f540FDw8P7yN5+dPaQrlNKnh4eHifycsbFu0TkkIfDw8P73N4bVM1L4XztsLrhHG914KHh4cX8/Iw/Tn/vjLfw8PDw1tP1TfDpyS45x90eFo8PDy8C7wbjYa8aG4XqmbnxMPDw7vB24y7kjTQtl/blBO9BQ8PD+8oL2+JztqmeWLIi/LiDHh4eHhHeZulgc0Rk+e8bkkkf8XDw8O7wdsH/c3YLMds2sF4eHh4N3jJiGsPy4+YlPXFjwE8PDy8o7y8DZEH7nbtIC+U2yEcHh4e3m3erNHQVrDRmD8omqOWBx4eHt5lXvKy2Qi/bQrPlgmKpQE8PDy8BW+2TNCG8vxw+1FchMTDw8Nb89pBVNtuaO/MP9lqAIaHh4e34OVj/v3Hytsfbdp4cz8eHh7eId7ZoJw8rS2v2wTwZnUADw8Pb81ru53718xWr24kMDw8PLwZ79TY/sYCwWzV4Je8h4eHh/eHvFnhO0sn+/ZEnRjw8PDwRry8TZAfvV29agdj9SICHh4e3gVeHuJno6wkxG+WFYqEhIeHh3eI1y5dtaOp/NPknyAB4+Hh4d3m5QOqPGTnjYmkRG7fiIeHh3eb15at+xCfF9ztysKBXgseHh7eE95Xec3q1fajtE/Dw8PD+0teG3Dz4H4qJRxbIMDDw8M7yst/5O9HZW3KyVsb0QAMDw8P7yivLZc3C1XH8tWw/YKHh4f3f3jtGlaecmYN4qf34+Hh4X0Ab9Zu2KeNet0KDw8P7zLvbENhE+7zz3psMwIPDw+v5J36RT8bjOUjrouNDDw8PLyU9w3nILtgNXeQwwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
